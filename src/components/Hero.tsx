@@ -223,14 +223,18 @@ export default function Hero() {
             />
           </motion.div>
 
-          {/* Verification badge */}
+          {/* Floating RE/MAX Balloon */}
           <motion.div
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.8, type: "spring" }}
-            className="absolute right-2 sm:right-8 top-32 z-20 w-14 h-14 rounded-full bg-gradient-to-br from-[#009FE3] to-[#0057A8] flex items-center justify-center text-white shadow-2xl shadow-[#0057A8]/40"
+            className="absolute -right-8 sm:-right-20 top-1/4 z-30"
           >
-            <BadgeCheck className="w-7 h-7" />
+            <img
+              src="/images/LOGO3-sem-fundo.png"
+              alt="RE/MAX Balloon"
+              className="w-32 sm:w-52 h-auto floaty-rev drop-shadow-2xl"
+            />
           </motion.div>
 
           {/* Floating bottom card */}
