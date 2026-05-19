@@ -1,0 +1,15 @@
+name: Elite Marketing Studio
+description: Squad especializada em criar ativos de marketing de alto impacto para o setor imobiliário, com foco no padrão RE/MAX.
+pipeline:
+  - step: 1
+    name: Pesquisa e Branding
+    agent: Creative Director
+    task: Analisar as fotos do imóvel e as diretrizes da marca para definir o conceito visual.
+  - step: 2
+    name: Redação Publicitária
+    agent: Copywriter
+    task: Criar textos persuasivos e legendas otimizadas para o Instagram.
+  - step: 3
+    name: Design e Interatividade
+    agent: Visual Designer
+    task: Desenvolver o layout do carrossel interativo com hotspots e integração de fotos.

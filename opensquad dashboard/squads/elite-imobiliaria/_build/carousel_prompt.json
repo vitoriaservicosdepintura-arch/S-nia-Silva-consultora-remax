@@ -1,0 +1,149 @@
+{
+    "project_name": "Carrossel Premium Instagram - Eliane Consultora Remax",
+    "style": {
+        "theme": "remax_luxury_branding",
+        "colors": [
+            "#FFFFFF",
+            "#003DA5",
+            "#E11B22",
+            "#F1F1F1"
+        ],
+        "visual_style": "clean, corporate luxury, vibrant, high-end real estate",
+        "typography": "Montserrat Bold, Helvetica Neue",
+        "effects": [
+            "crisp shadows",
+            "clean geometric accents",
+            "remax color blocks",
+            "premium photography integration",
+            "dynamic red and blue gradients"
+        ],
+        "layout": "instagram carousel",
+        "aspect_ratio": "4:5",
+        "resolution": "1080x1350"
+    },
+    "brand": {
+        "name": "Eliane Consultora Remax",
+        "website": "https://elianeconsultoraremax.vercel.app",
+        "logo_style": "Remax Official Style",
+        "positioning": "Expert Real Estate Consultant"
+    },
+    "character": {
+        "name": "Eliane",
+        "reference_image": "materiais-eliane-consultora/4-removebg-preview 4 alta qualidade.png",
+        "style": "professional confident consultant",
+        "outfit": "elegant business suit",
+        "lighting": "bright professional studio"
+    },
+    "carousel": {
+        "total_slides": 7,
+        "slides": [
+            {
+                "slide": 1,
+                "title": "Transforme sonhos em conquistas imobiliárias em Portugal",
+                "subtitle": "Consultoria estratégica com o padrão de excelência Remax.",
+                "visual_direction": {
+                    "background": "White background with dynamic Blue and Red geometric shapes",
+                    "elements": [
+                        "Eliane (Consultant) prominently featured",
+                        "Remax branding accents",
+                        "Minimalist luxury atmosphere"
+                    ],
+                    "text_position": "Center Top",
+                    "character_position": "Bottom Center",
+                    "style": "Premium Real Estate Magazine"
+                }
+            },
+            {
+                "slide": 2,
+                "title": "O mercado exige mais do que apenas intenção",
+                "content": [
+                    "❌ Falta de análise de mercado",
+                    "❌ Burocracia complexa",
+                    "❌ Negociações sem estratégia"
+                ],
+                "visual_direction": {
+                    "background": "Clean white with red and blue side borders",
+                    "icons": "Professional 3D icons",
+                    "style": "Problem-solving clear layout"
+                }
+            },
+            {
+                "slide": 3,
+                "title": "Decisão inteligente: Onde a estratégia encontra a oportunidade",
+                "content": [
+                    "✔ Avaliação precisa",
+                    "✔ Marketing de alto impacto",
+                    "✔ Fechamento seguro"
+                ],
+                "visual_direction": {
+                    "background": "Soft blue gradient with white overlays",
+                    "style": "Success-focused and corporate"
+                }
+            },
+            {
+                "slide": 4,
+                "title": "Vantagem Competitiva Remax",
+                "content": [
+                    "✨ Rede Global de Contatos",
+                    "✨ Exposição Premium do Imóvel",
+                    "✨ Especialista Local"
+                ],
+                "visual_direction": {
+                    "layout": "Feature grid with remax colors",
+                    "background": "White texture"
+                }
+            },
+            {
+                "slide": 5,
+                "title": "OPORTUNIDADE: Moradia T2 em Além do Rio",
+                "price": "63.000 €",
+                "details": {
+                    "area_privativa": "45m²",
+                    "area_total_lote": "275m²",
+                    "quartos": 2,
+                    "wc": 2,
+                    "ano": 1970
+                },
+                "visual_direction": {
+                    "background": "Actual property photo with overlay info",
+                    "style": "High-conversion real estate ad",
+                    "elements": [
+                        "Price badge in Red",
+                        "Key specs icons"
+                    ]
+                }
+            },
+            {
+                "slide": 6,
+                "title": "Minha missão é o seu sucesso",
+                "content": "Mais do que transações, construímos patrimônio com inteligência e transparência.",
+                "visual_direction": {
+                    "background": "Action shot of Eliane with property in the background",
+                    "style": "Humanized and professional"
+                }
+            },
+            {
+                "slide": 7,
+                "title": "Vamos encontrar o seu próximo grande investimento?",
+                "cta": "FALAR COM ELIANE",
+                "website": "elianeconsultoraremax.vercel.app",
+                "visual_direction": {
+                    "background": "Strong Remax Blue with White and Red accents",
+                    "layout": "Final CTA focus"
+                }
+            }
+        ]
+    },
+    "instagram_caption": {
+        "text": "O mercado imobiliário em Portugal exige visão e estratégia. 🏠 Moradia T2 em Além do Rio por apenas 63.000€! Uma oportunidade única para investir ou morar. Quer vender ou comprar com segurança? Entre em contato agora! ✨ Atendimento personalizado ✨ Estratégias exclusivas ✨ Acompanhamento completo 📲 Saiba mais no link da bio: https://elianeconsultoraremax.vercel.app",
+        "hashtags": [
+            "#Remax",
+            "#ImoveisPortugal",
+            "#InvestimentoImobiliario",
+            "#MoradiaT2",
+            "#ElianeRemax",
+            "#RealEstatePortugal",
+            "#Oportunidade"
+        ]
+    }
+}

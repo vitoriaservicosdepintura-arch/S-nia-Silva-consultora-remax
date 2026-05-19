@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carousel Eliane Lamarque</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=Outfit:wght@400;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --purple: #4A4A8A;
+            --mustard: #D89A3A;
+            --white: #F7F7F7;
+            --black: #1E1E1E;
+            --dark-gray: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #ccc;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            padding: 40px;
+        }
+
+        .slide {
+            width: 1080px;
+            height: 1080px;
+            background-color: var(--white);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Typography */
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .slide-number {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 180px;
+            color: var(--purple);
+            opacity: 0.15;
+            position: absolute;
+            top: -20px;
+            left: 40px;
+        }
+
+        .header-tag {
+            font-weight: 700;
+            color: var(--purple);
+            font-size: 24px;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .body-text {
+            font-size: 32px;
+            line-height: 1.6;
+            color: var(--dark-gray);
+            max-width: 80%;
+        }
+
+        .highlight {
+            color: var(--mustard);
+            font-weight: 700;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 60px;
+            left: 80px;
+            right: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 20px;
+            color: var(--black);
+            opacity: 0.6;
+            font-weight: 500;
+        }
+
+        .arrow {
+            width: 60px;
+            height: 60px;
+            background-color: var(--mustard);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: absolute;
+            top: 60px;
+            right: 60px;
+        }
+
+        /* Specific Slide Layouts */
+
+        /* Slide 01: Cover */
+        #slide-1 {
+            background-color: var(--purple);
+            color: white;
+        }
+
+        #slide-1 .title-box {
+            padding: 80px;
+            z-index: 2;
+            margin-top: 100px;
+        }
+
+        #slide-1 h1 {
+            font-size: 90px;
+            margin-bottom: 30px;
+        }
+
+        #slide-1 .image-container {
+            position: absolute;
+            bottom: 0;
+            right: -100px;
+            height: 90%;
+            z-index: 1;
+        }
+
+        #slide-1 .image-container img {
+            height: 100%;
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3));
+        }
+
+        /* Slide 02: Intro */
+        #slide-2 .content-box {
+            padding: 120px 80px;
+        }
+
+        #slide-2 h1 {
+            font-size: 70px;
+            color: var(--black);
+            margin-bottom: 40px;
+        }
+
+        #slide-2 .image-partial {
+            position: absolute;
+            bottom: 0;
+            right: -50px;
+            width: 400px;
+            opacity: 0.8;
+        }
+
+        /* Numbered Slides (3-6) */
+        .numbered-slide .content-box {
+            padding: 180px 80px;
+            z-index: 2;
+        }
+
+        .numbered-slide h1 {
+            font-size: 60px;
+            color: var(--black);
+            margin-bottom: 30px;
+        }
+
+        .numbered-slide .image-side {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            height: 800px;
+            z-index: 1;
+        }
+
+        .numbered-slide .image-side img {
+            height: 100%;
+        }
+
+        /* Slide 07: CTA */
+        #slide-7 {
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        #slide-7 .cta-box {
+            padding: 80px;
+        }
+
+        #slide-7 h1 {
+            font-size: 70px;
+            color: var(--purple);
+            margin-bottom: 40px;
+        }
+
+        #slide-7 .cta-button {
+            display: inline-block;
+            background-color: var(--mustard);
+            color: white;
+            padding: 30px 60px;
+            border-radius: 100px;
+            font-weight: 800;
+            font-size: 40px;
+            margin-top: 40px;
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SLIDE 01: CAPA -->
+    <div class="slide" id="slide-1">
+        <div class="title-box">
+            <div class="header-tag" style="color: rgba(255,255,255,0.8)">Consultoria Estratégica</div>
+            <h1>O INVESTIMENTO <br> SEGURO COMEÇA <br> EM <span class="highlight">PORTUGAL</span>.</h1>
+            <p style="font-size: 32px; opacity: 0.9; max-width: 600px;">Como famílias e investidores estão blindando seu
+                patrimônio no mercado imobiliário europeu.</p>
+        </div>
+        <div class="image-container">
+            <img src="../../materiais-eliane-consultora/4-removebg-preview 4 alta qualidade.png" alt="Eliane Lamarque">
+        </div>
+        <div class="footer" style="color: white">
+            <span>01/07</span>
+            <span>ELIANE LAMARQUE | RE/MAX</span>
+        </div>
+        <div class="arrow">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+        </div>
+    </div>
+
+    <!-- SLIDE 02: INTRO -->
+    <div class="slide" id="slide-2">
+        <div class="slide-number">02</div>
+        <div class="content-box">
+            <div class="header-tag">Estratégia Imobiliária</div>
+            <h1>MAIS QUE UM IMÓVEL, <br> <span class="highlight">UMA ESTRATÉGIA</span>.</h1>
+            <p class="body-text">Em um mundo de incertezas, o mercado português se consolidou como um dos portos mais
+                seguros para o capital internacional. <br><br> Não é apenas tijolo e argamassa; é <strong>proteção
+                    patrimonial</strong>.</p>
+        </div>
+        <img class="image-partial" src="../../materiais-eliane-consultora/1-removebg-preview.png" alt="">
+        <div class="footer">
+            <span>02/07</span>
+            <span>ELIANE LAMARQUE | RE/MAX</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 03: SEGURANÇA -->
+    <div class="slide numbered-slide" id="slide-3">
+        <div class="slide-number">03</div>
+        <div class="content-box">
+            <div class="header-tag">Ponto 01</div>
+            <h1>ESTABILIDADE <br> JURÍDICA E <br> ECONÔMICA.</h1>
+            <p class="body-text">Portugal oferece hoje uma das maiores seguranças institucionais da Europa. <br><br> O
+                processo de aquisição é transparente, previsível e seguro para quem busca tranquilidade.</p>
+        </div>
+        <div class="image-side">
+            <img src="../../materiais-eliane-consultora/2-removebg-preview.png" alt="">
+        </div>
+        <div class="footer">
+            <span>SEGURANÇA</span>
+            <span>ELIANE LAMARQUE | RE/MAX</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 04: RENTABILIDADE -->
+    <div class="slide numbered-slide" id="slide-4">
+        <div class="slide-number">04</div>
+        <div class="content-box">
+            <div class="header-tag">Ponto 02</div>
+            <h1>POTENCIAL DE <br> VALORIZAÇÃO <br> <span class="highlight">REAL</span>.</h1>
+            <p class="body-text">Cidades como Lisboa, Porto e regiões em expansão demonstram um crescimento sustentável,
+                garantindo rentabilidade tanto em arrendamento quanto em equity.</p>
+        </div>
+        <div class="image-side" style="right: -150px">
+            <img src="../../materiais-eliane-consultora/3-removebg-preview.png" alt="">
+        </div>
+        <div class="footer">
+            <span>RENTABILIDADE</span>
+            <span>ELIANE LAMARQUE | RE/MAX</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 05: LIFESTYLE -->
+    <div class="slide numbered-slide" id="slide-5">
+        <div class="slide-number">05</div>
+        <div class="content-box">
+            <div class="header-tag">Ponto 03</div>
+            <h1>O DESTINO Nº 1 <br> DOS <span class="highlight">INVESTIDORES</span>.</h1>
+            <p class="body-text">A qualidade de vida é o ativo invisível. Segurança e infraestrutura transformam cada
+                imóvel em Portugal em um ativo de altíssimo valor.</p>
+        </div>
+        <div class="image-side">
+            <img src="../../materiais-eliane-consultora/4-removebg-preview 4 alta qualidade.png" alt="">
+        </div>
+        <div class="footer">
+            <span>LIFESTYLE</span>
+            <span>ELIANE LAMARQUE | RE/MAX</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 06: CONSULTORIA -->
+    <div class="slide numbered-slide" id="slide-6">
+        <div class="slide-number">06</div>
+        <div class="content-box">
+            <div class="header-tag">Ponto 04</div>
+            <h1>ACESSO EXCLUSIVO <br> E <span class="highlight">CURADORIA</span>.</h1>
+            <p class="body-text">Como consultora RE/MAX, meu papel é filtrar o mercado e entregar apenas o que faz
+                sentido para o seu futuro. Atendimento certificado para quem não aceita menos que o topo.</p>
+        </div>
+        <div class="image-side" style="opacity: 0.5; filter: grayscale(1)">
+            <img src="../../materiais-eliane-consultora/logo1.png" alt=""
+                style="width: 500px; height: auto; margin-top: 500px">
+        </div>
+        <div class="footer">
+            <span>CURADORIA</span>
+            <span>ELIANE LAMARQUE | RE/MAX</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 07: CTA -->
+    <div class="slide" id="slide-7">
+        <div class="cta-box">
+            <div class="header-tag">O Próximo Passo</div>
+            <h1>VAMOS CONSTRUIR <br> O SEU PRÓXIMO <br> <span class="highlight">PASSO?</span></h1>
+            <p class="body-text" style="max-width: 100%">O imóvel dos seus sonhos — ou o seu próximo grande investimento
+                — começa com uma conversa estratégica.</p>
+            <a href="#" class="cta-button">PORTUGAL</a>
+            <p style="margin-top: 40px; font-size: 24px; color: var(--purple); font-weight: 700;">Comente a palavra
+                acima para começar.</p>
+        </div>
+        <div class="footer">
+            <span>07/07</span>
+            <span>ELIANE LAMARQUE | RE/MAX DINÂMICA</span>
+        </div>
+    </div>
+
+</body>
+
+</html>

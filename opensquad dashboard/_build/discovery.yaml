@@ -1,0 +1,33 @@
+squad_code: "elite-imobiliaria"
+purpose: "Analisar a referência do Instagram fornecida e criar conteúdo similar (Instagram Feed e WhatsApp) adaptado ao perfil da Eliane Consultora RE/MAX."
+domain: "content"
+
+company:
+  name: "Eliane Consultora RE/MAX"
+  tone: "Profissional, experiente, acolhedor e focado em confiança/segurança."
+  products: "Mediação imobiliária, compra/venda de imóveis, apoio jurídico e financeiro, acesso a imóveis premium."
+
+language: "Português (Brasil)"
+
+context:
+  audience: "Leads potenciais e Público Geral (autoridade)"
+  platforms: "Instagram e WhatsApp"
+  tone: "Profissional e de Autoridade"
+
+tools_needed:
+  - "instagram-publisher"
+  - "image-ai-generator"
+  - "template-designer"
+  - "blotato"
+  - "canva"
+
+investigation:
+  enabled: true
+  profiles:
+    - url: "https://www.instagram.com/reel/DX7G_a8SEhn/"
+      platform: "instagram"
+      investigation_mode: "single_post"
+
+target_formats:
+  - "instagram-feed"
+  - "whatsapp-broadcast"

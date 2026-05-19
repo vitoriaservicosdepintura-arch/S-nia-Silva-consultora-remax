@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Inter:wght@500;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 1080px;
+            height: 1440px;
+            overflow: hidden;
+            background: #F8F9FA;
+            color: #001A33;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            padding: 90px;
+            justify-content: center;
+            gap: 60px;
+        }
+
+        .title {
+            text-align: center;
+        }
+
+        .title h1 {
+            font-size: 64px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 0;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
+            color: #0054A6;
+        }
+
+        .title h1 span {
+            color: #E11B22;
+        }
+
+        .items {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .item {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            background: #fff;
+            border-radius: 24px;
+            padding: 35px 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border-left: 12px solid #E11B22;
+        }
+
+        .item-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #E11B22;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 34px;
+            font-weight: 800;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .item-text h2 {
+            font-size: 38px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #0054A6;
+        }
+
+        .item-text p {
+            font-size: 28px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 24px;
+            color: #999;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="title">
+        <h1>Tour pela <span>Moradia</span> em Windermere</h1>
+    </div>
+    <div class="items">
+        <div class="item">
+            <div class="item-icon">1</div>
+            <div class="item-text">
+                <h2>Piscina Infinita</h2>
+                <p>Vista panorâmica e design de última geração.</p>
+            </div>
+        </div>
+        <div class="item" style="border-left-color: #0054A6;">
+            <div class="item-icon" style="background: #0054A6;">2</div>
+            <div class="item-text">
+                <h2>Design Elevado</h2>
+                <p>Totalmente renovada com materiais premium.</p>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-icon">3</div>
+            <div class="item-text">
+                <h2>Localização Elite</h2>
+                <p>Próximo às melhores escolas e conveniências.</p>
+            </div>
+        </div>
+    </div>
+    <div class="footer">ARRASTE PARA VER DETALHES →</div>
+</body>
+
+</html>

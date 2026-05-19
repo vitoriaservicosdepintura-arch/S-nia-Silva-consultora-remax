@@ -1,0 +1,16 @@
+name: "Elite Pipeline"
+steps:
+  - file: "steps/step-01-pesquisar-foco.md"
+  - file: "steps/step-02-pesquisa-pauta.md"
+  - file: "steps/step-03-geracao-ganchos.md"
+  - file: "steps/step-04-aprovar-gancho.md"
+  - file: "steps/step-05-criar-conteudos.md"
+  - file: "steps/step-06-aprovar-conteudo.md"
+  - file: "steps/step-07-design-arte.md"
+  - file: "steps/step-08-auditoria-final.md"
+  - file: "steps/step-09-aprovacao-final.md"
+checkpoints:
+  - "steps/step-01-pesquisar-foco.md"
+  - "steps/step-04-aprovar-gancho.md"
+  - "steps/step-06-aprovar-conteudo.md"
+  - "steps/step-09-aprovacao-final.md"

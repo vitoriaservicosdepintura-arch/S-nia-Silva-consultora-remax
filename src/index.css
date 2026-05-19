@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-500: #009FE3;
+  --color-brand-700: #0057A8;
+  --color-brand-50: #EAF6FF;
+  --color-brand-100: #d7eeff;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Playfair Display", ui-serif, Georgia, serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 90%; /* Global shrink */
+}
+
+body {
+  font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  background: #ffffff;
+  color: #111827;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Gradient text helper */
+.text-gradient {
+  background: linear-gradient(90deg, #0057A8 0%, #009FE3 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+/* Soft glow under image */
+.glow-blob {
+  background: radial-gradient(closest-side, rgba(0,159,227,0.35), rgba(0,159,227,0));
+  filter: blur(40px);
+}
+
+/* WhatsApp pulse */
+@keyframes pulseRing {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  80%, 100% { transform: scale(1.6); opacity: 0; }
+}
+.pulse-ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: #25D366;
+  animation: pulseRing 1.8s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+  z-index: -1;
+}
+
+/* Floating animation */
+@keyframes floaty {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-14px); }
+}
+.floaty { animation: floaty 6s ease-in-out infinite; }
+
+@keyframes floatyRev {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(14px); }
+}
+.floaty-rev { animation: floatyRev 7s ease-in-out infinite; }
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #f5f7fa; }
+::-webkit-scrollbar-thumb { background: linear-gradient(#009FE3,#0057A8); border-radius: 8px; }
+
+/* Hide scrollbar for chat quick replies */
+.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-none::-webkit-scrollbar { display: none; }
+
+/* Avatar chat panel entrance glow */
+@keyframes panelGlow {
+  0% { box-shadow: 0 0 0 0 rgba(0,159,227,0.3); }
+  50% { box-shadow: 0 0 40px 10px rgba(0,159,227,0.1); }
+  100% { box-shadow: 0 0 0 0 rgba(0,159,227,0); }
+}
+.panel-glow { animation: panelGlow 2s ease-out forwards; }
+
+/* Talking ripple on avatar */
+@keyframes talkRipple {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+.talk-ripple::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 2px solid #009FE3;
+  animation: talkRipple 1s ease-out infinite;
+}
+
+/* Micro entrance for chat bubbles */
+@keyframes bubbleIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.bubble-in { animation: bubbleIn 0.25s ease-out forwards; }

@@ -1,0 +1,178 @@
+:root {
+  --remax-blue: #003DA5;
+  --remax-red: #E11B22;
+  --white: #FFFFFF;
+  --gray-light: #F8F9FA;
+  --text-dark: #1A1A1A;
+  --luxury-gold: #C8A96B;
+  --glass: rgba(255, 255, 255, 0.8);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+}
+
+body {
+  background: #f0f2f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.instagram-post {
+  width: 1080px;
+  height: 1350px;
+  background: var(--white);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Background Shapes */
+.shape {
+  position: absolute;
+  z-index: 1;
+}
+
+.shape-blue {
+  width: 150%;
+  height: 400px;
+  background: var(--remax-blue);
+  transform: rotate(-10deg);
+  top: -150px;
+  left: -25%;
+}
+
+.shape-red {
+  width: 120%;
+  height: 150px;
+  background: var(--remax-red);
+  transform: rotate(5deg);
+  bottom: 50px;
+  right: -10%;
+}
+
+/* Content Layout */
+.content {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 80px;
+  justify-content: space-between;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.logo-container img {
+  height: 60px;
+}
+
+.headline {
+  font-size: 82px;
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--remax-blue);
+  max-width: 800px;
+  margin-top: 40px;
+  text-transform: uppercase;
+}
+
+.headline span {
+  color: var(--remax-red);
+}
+
+.main-image {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 80%;
+  z-index: 5;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));
+}
+
+.property-card {
+  background: var(--glass);
+  backdrop-filter: blur(15px);
+  border-radius: 24px;
+  padding: 30px;
+  width: 500px;
+  border: 1px solid rgba(255,255,255,0.4);
+  z-index: 15;
+  margin-top: auto;
+  margin-bottom: 50px;
+}
+
+.price-tag {
+  background: var(--remax-red);
+  color: var(--white);
+  display: inline-block;
+  padding: 10px 25px;
+  border-radius: 50px;
+  font-weight: 800;
+  font-size: 32px;
+  margin-bottom: 15px;
+}
+
+.property-title {
+  font-size: 28px;
+  color: var(--remax-blue);
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  color: #444;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+}
+
+.consultant-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.consultant-name {
+  font-weight: 700;
+  font-size: 24px;
+  color: var(--white);
+}
+
+.cta-button {
+  background: var(--white);
+  color: var(--remax-blue);
+  padding: 18px 40px;
+  border-radius: 50px;
+  font-weight: 800;
+  font-size: 22px;
+  text-decoration: none;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}

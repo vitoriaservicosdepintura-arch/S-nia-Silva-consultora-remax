@@ -1,0 +1,5 @@
+id,name,title,execution,path
+iago-insight,Iago Insight,Estrategista de Mercado,subagent,./agents/iago-insight.agent.md
+clara-copy,Clara Copy,Redatora Premium,inline,./agents/clara-copy.agent.md
+davi-design,Davi Design,Artes Visual,subagent,./agents/davi-design.agent.md
+vera-veredito,Vera Veredito,Controladora de Qualidade,subagent,./agents/vera-veredito.agent.md

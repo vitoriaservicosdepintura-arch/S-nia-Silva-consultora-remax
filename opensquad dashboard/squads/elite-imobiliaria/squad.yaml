@@ -1,0 +1,15 @@
+name: "Elite Imobiliária"
+description: "Criação de conteúdo de alto valor (Instagram e WhatsApp) baseado em tendências do mercado imobiliário em Portugal."
+skills:
+  - web_search
+  - web_fetch
+  - image-creator
+  - template-designer
+data:
+  - pipeline/data/research-brief.md
+  - pipeline/data/domain-framework.md
+  - pipeline/data/quality-criteria.md
+  - pipeline/data/output-examples.md
+  - pipeline/data/anti-patterns.md
+  - pipeline/data/tone-of-voice.md
+  - pipeline/data/visual-identity.md

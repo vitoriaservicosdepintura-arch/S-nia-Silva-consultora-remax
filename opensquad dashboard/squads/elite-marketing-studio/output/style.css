@@ -1,0 +1,191 @@
+:root {
+    --remax-blue: #003DA5;
+    --remax-red: #E11B22;
+    --white: #FFFFFF;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: #121212;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.carousel-container {
+    width: 1080px;
+    height: 1350px;
+    background: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 50px 100px rgba(0, 0, 0, 0.5);
+}
+
+.slide {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: transform 0.5s ease-in-out;
+    display: none;
+}
+
+.slide.active {
+    display: block;
+}
+
+.slide-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Hotspots */
+.hotspot {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: var(--remax-red);
+    border: 4px solid white;
+    border-radius: 50%;
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 0 20px rgba(225, 27, 34, 0.6);
+    animation: pulse 2s infinite;
+    z-index: 100;
+}
+
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 0 0 0 rgba(225, 27, 34, 0.7);
+    }
+
+    70% {
+        transform: translate(-50%, -50%) scale(1.1);
+        box-shadow: 0 0 0 15px rgba(225, 27, 34, 0);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 0 0 0 rgba(225, 27, 34, 0);
+    }
+}
+
+.hotspot-tooltip {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    padding: 15px 25px;
+    border-radius: 12px;
+    width: max-content;
+    max-width: 250px;
+    font-size: 18px;
+    line-height: 1.4;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: 101;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.hotspot:hover .hotspot-tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-10px);
+}
+
+/* Branding Overlay */
+.overlay-brand {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    background: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    z-index: 200;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.overlay-consultant {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px 20px;
+    border-radius: 50px;
+    z-index: 200;
+    border: 2px solid var(--remax-blue);
+}
+
+.consultant-photo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--remax-red);
+}
+
+.info-card {
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+    background: var(--remax-blue);
+    color: white;
+    padding: 30px;
+    border-radius: 20px;
+    width: 400px;
+    z-index: 200;
+}
+
+.price-badge {
+    background: var(--remax-red);
+    padding: 8px 20px;
+    font-size: 32px;
+    font-weight: 900;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: inline-block;
+}
+
+.nav-buttons {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-sizing: border-box;
+    z-index: 300;
+    pointer-events: none;
+}
+
+.nav-btn {
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(5px);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    pointer-events: all;
+    border: none;
+    font-size: 24px;
+}
