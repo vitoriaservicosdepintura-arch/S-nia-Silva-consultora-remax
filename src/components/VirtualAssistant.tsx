@@ -474,7 +474,7 @@ export default function VirtualAssistant() {
                     ×
                   </button>
                   <p className="text-xs font-semibold text-slate-800 leading-snug">
-                    Olá! 👋 Posso ajudar com imóveis?
+                    Olá! 👋 como Posso ajudar ?
                   </p>
                   <div className="mt-1.5 flex items-center gap-1.5">
                     <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
