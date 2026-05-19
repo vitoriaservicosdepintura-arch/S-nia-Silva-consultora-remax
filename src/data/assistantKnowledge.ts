@@ -146,76 +146,31 @@ export const KNOWLEDGE_BASE: QA[] = [
     quickReplies: ["Quero também resultados!", "Falar com a Sónia"],
   },
 
-  // ─── BUYING - Deep Dive ──────────────────────────────────────────────────
+  // ─── PORTFOLIO & REAL LISTINGS ──────────────────────────────────────────
+  {
+    id: "portfolio",
+    triggers: ["o que tem", "lista de imóveis", "imóveis disponíveis", "portfolio", "carteira", "ver casas", "onde tem casas", "tondela", "viseu", "castro daire", "mangualde", "moimenta da beira", "sao pedro do sul", "terrenos", "apartamentos"],
+    answer:
+      "A Sónia gere atualmente uma carteira robusta com **53 imóveis para comprar** e **2 para arrendar**. 🏠\n\n**Destaques do momento:**\n🌟 **Viseu:** Apartamento T3 de Luxo (153m²) por 399.000€ - ideal para famílias.\n🌳 **Tondela (Barreiro de Besteiros):** Terrenos estratégicos a partir de 4.500€ - excelente para pequenos investidores.\n🏡 **Castro Daire:** Moradias com reduções de até 23% (venda rápida).\n📍 **Outras zonas:** Mangualde, Moimenta da Beira e São Pedro do Sul.\n\nQuer ver a lista completa de todos os 53 imóveis no site oficial da RE/MAX?",
+    quickReplies: ["Ver 53 imóveis no site", "Quero saber de Viseu", "Investir em Tondela"],
+  },
+
+  // ─── BUYING - Strategy ──────────────────────────────────────────────────
   {
     id: "buy_process",
-    triggers: ["como comprar", "processo compra", "documentos", "impostos", "imt", "is", "escritura", "crédito", "credito", "financiamento"],
+    triggers: ["como comprar", "quero comprar", "compro", "processo compra", "documentos", "impostos", "imt", "is", "escritura", "crédito", "credito", "financiamento"],
     answer:
-      "Excelente pergunta! Comprar em Portugal exige rigor. 📑\n\n**O que precisa saber:**\n1️⃣ **IMT & Imposto do Selo:** São os principais impostos na compra.\n2️⃣ **NIF:** Essencial para qualquer transação em Portugal.\n3️⃣ **Financiamento:** A Sónia trabalha com parceiros bancários para conseguir as melhores taxas.\n\nQuer que façamos uma simulação para o seu caso específico?",
-    quickReplies: ["Sim, simular", "Quais os documentos?", "Falar com a Sónia"],
-  },
-
-  // ─── SELLING - Deep Dive & Projections ──────────────────────────────────────
-  {
-    id: "sell_strategy",
-    triggers: ["estratégia", "estrategia", "plano marketing", "como vendem", "tempo de venda", "exclusividade"],
-    answer:
-      "Vender um imóvel não é apenas colocar um anúncio. É estratégia! 🎯\n\n**O nosso plano inclui:**\n✅ **Home Staging:** Dicas para tornar a casa mais apelativa.\n✅ **Reportagem Profissional:** Fotos e vídeo de alta qualidade.\n✅ **Filtro de Compradores:** Só levamos pessoas qualificadas à sua casa.\n✅ **Relatórios Semanais:** Saberá sempre o que está a acontecer.\n\nGostaria de ver o nosso plano de marketing completo?",
-    quickReplies: ["Ver plano", "Avaliar minha casa", "Como filtrar compradores?"],
-  },
-
-  // ─── OBJECTION: "Too Expensive" ──────────────────────────────────────────
-  {
-    id: "objection_expensive",
-    triggers: ["caro", "muito dinheiro", "preço alto", "preco alto", "comissão alta", "comissao alta", "baixar preço", "percentagem"],
-    answer:
-      "Compreendo perfeitamente a sua preocupação com os valores. 🤝 No entanto, na RE/MAX, não vendemos apenas um serviço, entregamos **resultados**.\n\n**Pense nisto:** Um imóvel mal vendido pode custar-lhe muito mais do que qualquer comissão. Nós garantimos a **máxima valorização** e segurança jurídica total. O preço é o que se paga, o **valor** é o que recebe.\n\nPodemos analisar o plano de rentabilidade para o seu caso?",
-    quickReplies: ["Analisar valorização", "Falar com a Sónia", "Ver provas de vendas"],
-  },
-
-  // ─── OBJECTION: "No Hurry" / "Wait" ─────────────────────────────────────────
-  {
-    id: "objection_wait",
-    triggers: ["esperar", "depois", "mais tarde", "sem pressa", "ver no futuro", "daqui a uns meses", "não agora"],
-    answer:
-      "O mercado imobiliário em Portugal está num momento de **grande dinamismo**. ⏱️\n\nEsperar pode significar perder oportunidades com taxas de juro atuais ou a valorização constante dos distritos como **Viseu, Porto e Lisboa**. \n\nA Sónia pode fazer uma análise de mercado gratuita hoje, para que quando decidir, tenha toda a informação correta. O conhecimento não ocupa lugar, concorda?",
-    quickReplies: ["Fazer análise agora", "Saber sobre o mercado", "Contactar depois"],
-  },
-
-  // ─── REGIONS: All Districts ──────────────────────────────────────────────
-  {
-    id: "regions",
-    triggers: ["distritos", "cidades", "lisboa", "porto", "braga", "aveiro", "faro", "algarve", "coimbra", "setubal", "leiria", "evora", "beja", "funchal", "madeira", "pontas delgada", "açores", "santarem", "castelo branco", "guarda", "bragança", "vila real", "viana do castelo"],
-    answer:
-      "Temos especialistas e imóveis em **todos os distritos de Portugal**! 🇵🇹\n\n🌟 **Litoral (Lisboa, Porto, Algarve):** Alta valorização e procura internacional.\n🏡 **Interior (Viseu, Guarda, Castelo Branco):** Qualidade de vida superior e preços competitivos.\n📈 **Ilhas:** Mercados exclusivos e turísticos.\n\nEm qual distrito ou cidade está a focar a sua procura?",
-    quickReplies: ["Viseu/Daire", "Porto/Norte", "Lisboa/Centro", "Algarve/Sul"],
-  },
-
-  // ─── INVESTOR PROFILE ──────────────────────────────────────────────────
-  {
-    id: "investor_class",
-    triggers: ["perfil investidor", "buy to let", "flipping", "reabilitação", "rendimento mensal", "taxa de retorno", "yield"],
-    answer:
-      "Para investidores, a Sónia foca em **procurar a rentabilidade (Yield)**. 💰\n\nAtuamos com:\n🏢 **Arrendamento Tradicional:** Estabilidade de longo prazo.\n🏠 **Alojamento Local:** Maximização de ganhos em zonas turísticas.\n🛠️ **Reabilitação:** Compra para recuperar e vender.\n\nQual é a sua meta de rentabilidade anual?",
-    quickReplies: ["5% a 7%", "+ de 8%", "Quero segurança", "Falar com a Sónia"],
-  },
-
-  // ─── AGENCY LOCATION ────────────────────────────────────────────────────
-  {
-    id: "agency_location",
-    triggers: ["onde fica a agencia", "morada da agencia", "endereço", "endereco", "escritório", "onde estão", "onde estao"],
-    answer:
-      "A nossa agência é a **RE/MAX Dinâmica Daire**. 📍\n\nFicamos situados no coração da região de Viseu, mas a Sónia desloca-se a qualquer ponto de Portugal para o atender pessoalmente. \n\n📍 **Sede:** Vila Nova de Paiva / Castro Daire\n\nPrefere uma reunião no nosso escritório ou que a Sónia vá até si?",
-    quickReplies: ["Vou à agência", "Sónia vem até mim", "Reunião Online"],
+      "Comprar com a Sónia significa ter acesso a oportunidades antes de chegarem ao mercado público. 📑\n\n**Análise do seu perfil:** Para quem procura habitação própria (como o nosso **Apartamento em Viseu** de 399k) ou investimento em solo (como os nossos **Terrenos em Tondela** de 4.5k), o processo exige:\n1️⃣ NIF e histórico financeiro.\n2️⃣ Análise de IMT e Imposto do Selo.\n3️⃣ Simulação de crédito (temos parceiros diretos).\n\nQual é o seu orçamento ideal neste momento?",
+    quickReplies: ["Até 50.000€", "Até 150.000€", "Mais de 300.000€", "Falar com Sónia"],
   },
 
   // ─── PROPOSALS / SUGGESTIONS ──────────────────────────────────────────
   {
     id: "proposals",
-    triggers: ["proposta", "oportunidade", "negócio", "negocio", "sugestão", "sugestao", "o que tem", "lista de imóveis"],
+    triggers: ["proposta", "oportunidade", "negócio", "negocio", "sugestão", "sugestao", "o que sugere"],
     answer:
-      "A Sónia tem acesso a uma carteira exclusiva no sistema RE/MAX! 💎\n\n**Sugestões atuais:**\n🏠 **Para Morar:** Moradias T3+ na zona de Viseu com excelentes áreas.\n🏢 **Para Investir:** Apartamentos para reabilitação em centros urbanos (Porto/Bragança).\n🌟 **Luxo:** Imóveis de prestígio no Litoral com alta valorização.\n\nQual destas opções gostaria de receber no seu email ou WhatsApp?",
-    quickReplies: ["Imóveis Viseu", "Oportunidades Investimento", "Imóveis de Luxo"],
+      "Com base no mercado atual em Portugal e no portfólio de 53 imóveis da Sónia, sugiro **três caminhos estratégicos**: 💎\n\n1️⃣ **Investimento Seguro:** Terrenos em Tondela e Moimenta da Beira (baixos valores de entrada/4.500€).\n2️⃣ **Upgrade Familiar:** Apartamento T3 em Viseu (conforto máximo).\n3️⃣ **Retiro de Férias:** Moradias em Castro Daire e São Pedro do Sul com reduções de preço atrativas.\n\nQual destes percursos faz mais sentido para o seu futuro?",
+    quickReplies: ["Investimento (4.5k+)", "Familiar (Viseu)", "Oportunidades Castro Daire"],
   },
 
   // ─── Fallback ─────────────────────────────────────────────────────────────
@@ -223,8 +178,8 @@ export const KNOWLEDGE_BASE: QA[] = [
     id: "fallback",
     triggers: [],
     answer:
-      "Como sua assistente inteligente, quero dar-lhe a melhor resposta. 🤔 Não encontrei um detalhe exato sobre isso, mas posso ajudar especificamente com:\n\n🏡 **Venda:** Como valorizar a sua casa.\n🔑 **Compra:** Processo e financiamento.\n📈 **Investimento:** Zonas de alta rentabilidade em Portugal.\n🇵🇹 **Regiões:** Análise de qualquer distrito.\n\nQual destes temas prefere explorar agora?",
-    quickReplies: ["Comprar", "Vender", "Investir", "Falar com a Sónia"],
+      "Como sua assistente inteligente, analiso os 53 imóveis ativos e a rede RE/MAX para lhe dar a melhor resposta. 🤔 Não encontrei um detalhe exato sobre isso, mas posso ajudar especificamente com:\n\n🏠 **Portfólio:** Detalhes de Viseu, Tondela, Castro Daire e mais.\n🔑 **Venda:** Como valorizar e vender rápido.\n📈 **Investimento:** Terrenos a partir de 4.500€.\n📞 **Contacto:** Falar diretamente com a Sónia.\n\nQual destes temas prefere explorar agora?",
+    quickReplies: ["Ver Imóveis", "Como Vender", "Falar no WhatsApp"],
   },
 ];
 
