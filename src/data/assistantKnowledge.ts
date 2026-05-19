@@ -146,28 +146,91 @@ export const KNOWLEDGE_BASE: QA[] = [
     quickReplies: ["Quero também resultados!", "Falar com a Sónia"],
   },
 
-  // ── Lead capture ─────────────────────────────────────────────────────────
+  // ─── BUYING - Deep Dive ──────────────────────────────────────────────────
   {
-    id: "lead",
-    triggers: ["formulário", "formulario", "preencher", "dados", "registar", "register", "inscrever"],
+    id: "buy_process",
+    triggers: ["como comprar", "processo compra", "documentos", "impostos", "imt", "is", "escritura", "crédito", "credito", "financiamento"],
     answer:
-      "Perfeito! 📋 Preencha o formulário no site com o seu **nome, telefone, email e objetivo** — é rápido e gratuito!\n\nA Sónia entrará em contacto **pessoalmente** em menos de 24 horas para uma consultoria personalizada. Pode também clicar diretamente no botão abaixo:",
-    quickReplies: ["Ir para o formulário", "Preferir WhatsApp"],
+      "Excelente pergunta! Comprar em Portugal exige rigor. 📑\n\n**O que precisa saber:**\n1️⃣ **IMT & Imposto do Selo:** São os principais impostos na compra.\n2️⃣ **NIF:** Essencial para qualquer transação em Portugal.\n3️⃣ **Financiamento:** A Sónia trabalha com parceiros bancários para conseguir as melhores taxas.\n\nQuer que façamos uma simulação para o seu caso específico?",
+    quickReplies: ["Sim, simular", "Quais os documentos?", "Falar com a Sónia"],
   },
 
-  // ── Fallback ─────────────────────────────────────────────────────────────
+  // ─── SELLING - Deep Dive & Projections ──────────────────────────────────────
+  {
+    id: "sell_strategy",
+    triggers: ["estratégia", "estrategia", "plano marketing", "como vendem", "tempo de venda", "exclusividade"],
+    answer:
+      "Vender um imóvel não é apenas colocar um anúncio. É estratégia! 🎯\n\n**O nosso plano inclui:**\n✅ **Home Staging:** Dicas para tornar a casa mais apelativa.\n✅ **Reportagem Profissional:** Fotos e vídeo de alta qualidade.\n✅ **Filtro de Compradores:** Só levamos pessoas qualificadas à sua casa.\n✅ **Relatórios Semanais:** Saberá sempre o que está a acontecer.\n\nGostaria de ver o nosso plano de marketing completo?",
+    quickReplies: ["Ver plano", "Avaliar minha casa", "Como filtrar compradores?"],
+  },
+
+  // ─── OBJECTION: "Too Expensive" ──────────────────────────────────────────
+  {
+    id: "objection_expensive",
+    triggers: ["caro", "muito dinheiro", "preço alto", "preco alto", "comissão alta", "comissao alta", "baixar preço", "percentagem"],
+    answer:
+      "Compreendo perfeitamente a sua preocupação com os valores. 🤝 No entanto, na RE/MAX, não vendemos apenas um serviço, entregamos **resultados**.\n\n**Pense nisto:** Um imóvel mal vendido pode custar-lhe muito mais do que qualquer comissão. Nós garantimos a **máxima valorização** e segurança jurídica total. O preço é o que se paga, o **valor** é o que recebe.\n\nPodemos analisar o plano de rentabilidade para o seu caso?",
+    quickReplies: ["Analisar valorização", "Falar com a Sónia", "Ver provas de vendas"],
+  },
+
+  // ─── OBJECTION: "No Hurry" / "Wait" ─────────────────────────────────────────
+  {
+    id: "objection_wait",
+    triggers: ["esperar", "depois", "mais tarde", "sem pressa", "ver no futuro", "daqui a uns meses", "não agora"],
+    answer:
+      "O mercado imobiliário em Portugal está num momento de **grande dinamismo**. ⏱️\n\nEsperar pode significar perder oportunidades com taxas de juro atuais ou a valorização constante dos distritos como **Viseu, Porto e Lisboa**. \n\nA Sónia pode fazer uma análise de mercado gratuita hoje, para que quando decidir, tenha toda a informação correta. O conhecimento não ocupa lugar, concorda?",
+    quickReplies: ["Fazer análise agora", "Saber sobre o mercado", "Contactar depois"],
+  },
+
+  // ─── REGIONS: All Districts ──────────────────────────────────────────────
+  {
+    id: "regions",
+    triggers: ["distritos", "cidades", "lisboa", "porto", "braga", "aveiro", "faro", "algarve", "coimbra", "setubal", "leiria", "evora", "beja", "funchal", "madeira", "pontas delgada", "açores", "santarem", "castelo branco", "guarda", "bragança", "vila real", "viana do castelo"],
+    answer:
+      "Temos especialistas e imóveis em **todos os distritos de Portugal**! 🇵🇹\n\n🌟 **Litoral (Lisboa, Porto, Algarve):** Alta valorização e procura internacional.\n🏡 **Interior (Viseu, Guarda, Castelo Branco):** Qualidade de vida superior e preços competitivos.\n📈 **Ilhas:** Mercados exclusivos e turísticos.\n\nEm qual distrito ou cidade está a focar a sua procura?",
+    quickReplies: ["Viseu/Daire", "Porto/Norte", "Lisboa/Centro", "Algarve/Sul"],
+  },
+
+  // ─── INVESTOR PROFILE ──────────────────────────────────────────────────
+  {
+    id: "investor_class",
+    triggers: ["perfil investidor", "buy to let", "flipping", "reabilitação", "rendimento mensal", "taxa de retorno", "yield"],
+    answer:
+      "Para investidores, a Sónia foca em **procurar a rentabilidade (Yield)**. 💰\n\nAtuamos com:\n🏢 **Arrendamento Tradicional:** Estabilidade de longo prazo.\n🏠 **Alojamento Local:** Maximização de ganhos em zonas turísticas.\n🛠️ **Reabilitação:** Compra para recuperar e vender.\n\nQual é a sua meta de rentabilidade anual?",
+    quickReplies: ["5% a 7%", "+ de 8%", "Quero segurança", "Falar com a Sónia"],
+  },
+
+  // ─── AGENCY LOCATION ────────────────────────────────────────────────────
+  {
+    id: "agency_location",
+    triggers: ["onde fica a agencia", "morada da agencia", "endereço", "endereco", "escritório", "onde estão", "onde estao"],
+    answer:
+      "A nossa agência é a **RE/MAX Dinâmica Daire**. 📍\n\nFicamos situados no coração da região de Viseu, mas a Sónia desloca-se a qualquer ponto de Portugal para o atender pessoalmente. \n\n📍 **Sede:** Vila Nova de Paiva / Castro Daire\n\nPrefere uma reunião no nosso escritório ou que a Sónia vá até si?",
+    quickReplies: ["Vou à agência", "Sónia vem até mim", "Reunião Online"],
+  },
+
+  // ─── PROPOSALS / SUGGESTIONS ──────────────────────────────────────────
+  {
+    id: "proposals",
+    triggers: ["proposta", "oportunidade", "negócio", "negocio", "sugestão", "sugestao", "o que tem", "lista de imóveis"],
+    answer:
+      "A Sónia tem acesso a uma carteira exclusiva no sistema RE/MAX! 💎\n\n**Sugestões atuais:**\n🏠 **Para Morar:** Moradias T3+ na zona de Viseu com excelentes áreas.\n🏢 **Para Investir:** Apartamentos para reabilitação em centros urbanos (Porto/Bragança).\n🌟 **Luxo:** Imóveis de prestígio no Litoral com alta valorização.\n\nQual destas opções gostaria de receber no seu email ou WhatsApp?",
+    quickReplies: ["Imóveis Viseu", "Oportunidades Investimento", "Imóveis de Luxo"],
+  },
+
+  // ─── Fallback ─────────────────────────────────────────────────────────────
   {
     id: "fallback",
     triggers: [],
     answer:
-      "Hmm, não tenho a certeza se entendi bem a sua questão. 🤔 Posso ajudá-lo com informações sobre:\n\n🏠 Compra de imóveis\n🔑 Venda de imóveis\n📈 Investimentos em Portugal\n📞 Contactar a Sónia\n🗓️ Agendar consultoria\n\nOu se preferir, fale diretamente com a Sónia pelo **WhatsApp: +351 913 536 291**",
-    quickReplies: ["Comprar imóvel", "Vender imóvel", "Falar no WhatsApp"],
+      "Como sua assistente inteligente, quero dar-lhe a melhor resposta. 🤔 Não encontrei um detalhe exato sobre isso, mas posso ajudar especificamente com:\n\n🏡 **Venda:** Como valorizar a sua casa.\n🔑 **Compra:** Processo e financiamento.\n📈 **Investimento:** Zonas de alta rentabilidade em Portugal.\n🇵🇹 **Regiões:** Análise de qualquer distrito.\n\nQual destes temas prefere explorar agora?",
+    quickReplies: ["Comprar", "Vender", "Investir", "Falar com a Sónia"],
   },
 ];
 
 export function findAnswer(input: string): QA {
   const normalized = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  
+
   for (const qa of KNOWLEDGE_BASE) {
     if (qa.id === "fallback") continue;
     for (const trigger of qa.triggers) {
@@ -177,7 +240,7 @@ export function findAnswer(input: string): QA {
       }
     }
   }
-  
+
   // return fallback
   return KNOWLEDGE_BASE[KNOWLEDGE_BASE.length - 1];
 }

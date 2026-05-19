@@ -176,6 +176,29 @@ export default function VirtualAssistant() {
   const voiceRef = useRef<SpeechSynthesisVoice | null>(null);
   const [voiceReady, setVoiceReady] = useState(false);
   const [voiceName, setVoiceName] = useState<string>("");
+  const [profile, setProfile] = useState({
+    intent: "unknown",
+    area: "",
+    urgency: "medium",
+    score: 0
+  });
+
+  // ── Lead Intelligence ──────────────────────────────────────────────────────
+  const analyzeLead = (text: string) => {
+    const txt = text.toLowerCase();
+    setProfile(prev => {
+      let intent = prev.intent;
+      let score = prev.score;
+
+      if (txt.includes("comprar") || txt.includes("procuro")) { intent = "buyer"; score += 20; }
+      if (txt.includes("vender") || txt.includes("avaliar")) { intent = "seller"; score += 25; }
+      if (txt.includes("investir") || txt.includes("rendimento")) { intent = "investor"; score += 30; }
+
+      if (txt.includes("rápido") || txt.includes("urgente")) score += 15;
+
+      return { ...prev, intent, score };
+    });
+  };
 
   // ── Preload best voice on mount / lang change ───────────────────────
   useEffect(() => {
@@ -308,10 +331,35 @@ export default function VirtualAssistant() {
         { id: uid(), from: "user", text: text.trim(), time: now() },
       ]);
       setInput("");
+
+      // Analyze intent & profiling
+      analyzeLead(text);
+
       const qa = findAnswer(text);
-      pushAssistantMessage(qa.answer, qa.quickReplies);
+
+      // Simulating a "Smart Intelligence Search" if it's a district or price question
+      const isSearch = text.toLowerCase().match(/onde|quanto|preço|mercado|distrito|cidade|projeto/);
+
+      if (isSearch && qa.id === "fallback") {
+        setTyping(true);
+        setTimeout(() => {
+          // Fake "Researching" message
+          setMessages(prev => [...prev, {
+            id: uid(),
+            from: "assistant",
+            text: "🔍 *Consultando bases de dados do mercado imobiliário em tempo real...*",
+            time: now()
+          }]);
+
+          setTimeout(() => {
+            pushAssistantMessage(qa.answer, qa.quickReplies);
+          }, 1500);
+        }, 800);
+      } else {
+        pushAssistantMessage(qa.answer, qa.quickReplies);
+      }
     },
-    [pushAssistantMessage]
+    [pushAssistantMessage, analyzeLead]
   );
 
   // ── Quick reply router ────────────────────────────────────────────────────
@@ -565,11 +613,32 @@ export default function VirtualAssistant() {
                 </div>
 
                 <div className="flex-1 min-w-0 relative z-10">
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-2">
                     <p className="font-semibold text-white text-sm">Sónia Silva</p>
                     <Sparkles className="w-3 h-3 text-yellow-300" />
+                    {profile.intent !== "unknown" && (
+                      <motion.span
+                        initial={{ opacity: 0, x: 5 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="bg-white/20 text-white text-[9px] px-1.5 py-0.5 rounded border border-white/20 font-bold uppercase tracking-wider"
+                      >
+                        {profile.intent}
+                      </motion.span>
+                    )}
                   </div>
                   <p className="text-white/75 text-[11px]">Consultora Virtual · RE/MAX</p>
+                  {profile.score > 0 && (
+                    <div className="flex items-center gap-1 mt-0.5">
+                      <div className="h-1 flex-1 bg-white/20 rounded-full overflow-hidden max-w-[60px]">
+                        <motion.div
+                          className="h-full bg-yellow-400"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${Math.min(profile.score, 100)}%` }}
+                        />
+                      </div>
+                      <span className="text-[9px] text-white/60 font-mono">L.S: {profile.score}</span>
+                    </div>
+                  )}
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <SoundWave active={talking} />
                     {!talking && !listening && (
