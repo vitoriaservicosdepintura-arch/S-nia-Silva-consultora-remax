@@ -9,8 +9,15 @@ import FloatingElements from "./components/FloatingElements";
 import VirtualAssistant from "./components/VirtualAssistant";
 import { AdminProvider } from "./context/AdminContext";
 import AdminDashboard, { LoginOverlay } from "./components/AdminDashboard";
+import TestLeads from "./components/TestLeads";
 
 export default function App() {
+  const isTestRoute = typeof window !== "undefined" && window.location.pathname === "/test-leads";
+
+  if (isTestRoute) {
+    return <TestLeads />;
+  }
+
   return (
     <AdminProvider>
       <div className="min-h-screen bg-white text-slate-900 overflow-x-hidden">

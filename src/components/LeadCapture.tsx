@@ -16,11 +16,24 @@ export default function LeadCapture() {
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({ nome: "", telefone: "", email: "", objetivo: "Comprar" });
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    try {
+      await fetch('/api/leads', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(form)
+      });
+    } catch (err) {
+      console.error("Erro a enviar formulário:", err);
+    }
+
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 4500);
-    setForm({ nome: "", telefone: "", email: "", objetivo: "Comprar" });
+    setForm({ nome: "", telefone: "", email: "", objetivo: "Comprar imóvel para habitação" });
   };
 
   return (
