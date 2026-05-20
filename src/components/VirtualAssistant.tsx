@@ -236,6 +236,10 @@ export default function VirtualAssistant() {
 
   // ── Translate chat on language change ───────────────────────────────────
   useEffect(() => {
+    // Force reset the voice cache so the assistant finds the new language
+    voiceRef.current = null;
+    setVoiceReady(false);
+
     if (messages.length > 0) {
       setTyping(true);
       translateChat(messages, currentLang).then(translated => {
@@ -319,7 +323,7 @@ export default function VirtualAssistant() {
         const speakNext = () => {
           if (idx >= sentences.length || muted) { setTalking(false); return; }
           const chunk = new SpeechSynthesisUtterance(sentences[idx].trim());
-          chunk.lang = "pt-PT";
+          chunk.lang = currentLang;
           chunk.rate = utt.rate;
           chunk.pitch = utt.pitch;
           chunk.volume = utt.volume;
@@ -335,7 +339,7 @@ export default function VirtualAssistant() {
 
       synth.speak(utt);
     },
-    [muted] // eslint-disable-line react-hooks/exhaustive-deps
+    [muted, currentLang] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   // ── Push assistant message ─────────────────────────────────────────────────
