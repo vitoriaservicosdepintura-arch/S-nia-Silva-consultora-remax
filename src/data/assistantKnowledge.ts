@@ -183,10 +183,10 @@ export const KNOWLEDGE_BASE: QA[] = [
   },
 ];
 
-export function findAnswer(input: string): QA {
+export function findAnswer(input: string, knowledgeBase: QA[] = KNOWLEDGE_BASE): QA {
   const normalized = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-  for (const qa of KNOWLEDGE_BASE) {
+  for (const qa of knowledgeBase) {
     if (qa.id === "fallback") continue;
     for (const trigger of qa.triggers) {
       const normTrigger = trigger.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -197,5 +197,6 @@ export function findAnswer(input: string): QA {
   }
 
   // return fallback
-  return KNOWLEDGE_BASE[KNOWLEDGE_BASE.length - 1];
+  const fallback = knowledgeBase.find(qa => qa.id === 'fallback') || KNOWLEDGE_BASE[KNOWLEDGE_BASE.length - 1];
+  return fallback;
 }

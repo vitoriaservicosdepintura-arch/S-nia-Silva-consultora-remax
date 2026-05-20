@@ -284,7 +284,7 @@ export default function WelcomeAvatar({ onEnterChat, onClose }: Props) {
             <img src="/images/LOGO3-sem-fundo.png" alt="RE/MAX" className="w-full h-full object-contain filter drop-shadow-lg" />
           </div>
           <div>
-            <p className="text-white text-[10px] font-bold leading-tight">Dinâmica Daire</p>
+            <p className="text-white text-[10px] font-bold leading-tight">Dinâmica</p>
             <p className="text-white/70 text-[9px]">Portugal</p>
           </div>
         </motion.div>

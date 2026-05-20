@@ -5,10 +5,10 @@ import {
   Phone,
   ArrowRight,
   MessageCircle,
-  BadgeCheck,
   Sparkles,
 } from "lucide-react";
 import { Facebook, Instagram } from "./BrandIcons";
+import { useAdmin } from "../context/AdminContext";
 
 const cards = [
   {
@@ -38,6 +38,8 @@ const cards = [
 ];
 
 export default function Hero() {
+  const { content } = useAdmin();
+  const { hero } = content;
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -103,16 +105,16 @@ export default function Hero() {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-xs font-semibold text-[#0057A8] shadow-sm"
           >
             <Sparkles className="w-3.5 h-3.5 text-[#009FE3]" />
-            RE/MAX Dinâmica Daire · Portugal
+            RE/MAX Dinâmica · Portugal
           </motion.span>
 
 
 
           <h1 className="mt-4 font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-[#0A2540] leading-[1.05]">
-            Sónia <span className="text-gradient">Silva</span>
+            {hero.title}
           </h1>
           <p className="mt-2 text-base sm:text-lg text-[#0057A8] font-semibold tracking-wide">
-            Consultoria Imobiliária
+            {hero.subtitle}
           </p>
 
           <h2 className="mt-4 text-xl sm:text-2xl font-semibold text-slate-800 leading-snug max-w-xl">
@@ -121,7 +123,7 @@ export default function Hero() {
           </h2>
 
           <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl">
-            Com a <strong>Equipa Júlio Fernandes e Sónia Silva</strong>, garantimos uma consultoria de excelência para encontrar o seu imóvel ideal e investir com total segurança, concretizando os seus objetivos no mercado imobiliário em Portugal.
+            {hero.description}
           </p>
 
           {/* CTAs */}
@@ -201,7 +203,7 @@ export default function Hero() {
                   initial={{ y: 80, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ duration: 1.2, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                  src="/images/sonia.png"
+                  src={hero.portraitUrl}
                   alt="Sónia Silva - Consultora Imobiliária"
                   className="relative z-0 max-w-[95%] h-auto object-contain drop-shadow-2xl translate-y-10"
                 />

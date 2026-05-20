@@ -18,6 +18,8 @@ import {
 import { findAnswer, AGENT_PROFILE } from "../data/assistantKnowledge";
 import WelcomeAvatar from "./WelcomeAvatar";
 import { pickBestVoice, loadVoices, cleanForTTS } from "../utils/ptVoice";
+import { useAdmin } from "../context/AdminContext";
+import { askGroq } from "../utils/groqClient";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Message {
@@ -46,14 +48,17 @@ function uid() {
   return Math.random().toString(36).slice(2);
 }
 
-// parse **bold** and [link](url) markdown → JSX
+// parse **bold**, [link](url), and ![alt](url) markdown → JSX
 function parseText(text: string) {
   const lines = text.split("\n");
   return lines.map((line, li) => {
-    const parts = line.split(/(\*\*[^*]+\*\*)/g);
+    // Regex splits the string and keeps the matched patterns in the array
+    const parts = line.split(/(\*\*[^*]+\*\*|!\[[^\]]*\]\([^)]+\)|\[[^\]]+\]\([^)]+\))/g);
     return (
       <span key={li}>
         {parts.map((p, i) => {
+          if (!p) return null;
+
           if (p.startsWith("**") && p.endsWith("**")) {
             return (
               <strong key={i} className="font-semibold text-[#0057A8]">
@@ -61,21 +66,37 @@ function parseText(text: string) {
               </strong>
             );
           }
-          const linkMatch = p.match(/\[([^\]]+)\]\(([^)]+)\)/);
-          if (linkMatch) {
+
+          // Image check: ![alt](url)
+          if (p.startsWith("![") && p.match(/!\[([^\]]*)\]\(([^)]+)\)/)) {
+            const m = p.match(/!\[([^\]]*)\]\(([^)]+)\)/)!;
+            return (
+              <img
+                key={i}
+                src={m[2]}
+                alt={m[1]}
+                className="w-full h-auto rounded-xl mt-3 mb-3 shadow-sm border border-slate-100 object-cover max-h-64"
+              />
+            );
+          }
+
+          // Link check: [text](url)
+          if (p.startsWith("[") && p.match(/\[([^\]]+)\]\(([^)]+)\)/)) {
+            const m = p.match(/\[([^\]]+)\]\(([^)]+)\)/)!;
             return (
               <a
                 key={i}
-                href={linkMatch[2]}
+                href={m[2]}
                 target="_blank"
                 rel="noreferrer"
                 className="underline text-[#009FE3] hover:text-[#0057A8]"
               >
-                {linkMatch[1]}
+                {m[1]}
               </a>
             );
           }
-          return <span key={i}>{p}</span>;
+
+          return <span key={i} dangerouslySetInnerHTML={{ __html: p.replace(/\n/g, '<br/>') }} />;
         })}
         {li < lines.length - 1 && <br />}
       </span>
@@ -155,8 +176,9 @@ function SoundWave({ active }: { active: boolean }) {
   );
 }
 
-// ─── Main Component ───────────────────────────────────────────────────────────
 export default function VirtualAssistant() {
+  const { content } = useAdmin();
+  const { knowledgeBase, properties } = content;
   const [phase, setPhase] = useState<Phase>("idle");
   const [minimized, setMinimized] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -223,7 +245,7 @@ export default function VirtualAssistant() {
     if (phase === "chat" && !hasGreeted) {
       setHasGreeted(true);
       setTimeout(() => {
-        const welcome = findAnswer("olá");
+        const welcome = findAnswer("olá", knowledgeBase);
         pushAssistantMessage(welcome.answer, welcome.quickReplies);
       }, 350);
     }
@@ -324,42 +346,45 @@ export default function VirtualAssistant() {
 
   // ── Handle user send ──────────────────────────────────────────────────────
   const handleSend = useCallback(
-    (text: string) => {
+    async (text: string) => {
       if (!text.trim()) return;
-      setMessages((prev) => [
-        ...prev,
-        { id: uid(), from: "user", text: text.trim(), time: now() },
-      ]);
+
+      const newMsg = { id: uid(), from: "user", text: text.trim(), time: now() } as Message;
+      setMessages((prev) => [...prev, newMsg]);
       setInput("");
+      setTyping(true);
 
       // Analyze intent & profiling
       analyzeLead(text);
 
-      const qa = findAnswer(text);
+      // Build chat history for Groq
+      const historyContext = messages.map(m => ({
+        role: m.from === "user" ? "user" : "assistant",
+        content: m.text
+      }));
 
-      // Simulating a "Smart Intelligence Search" if it's a district or price question
-      const isSearch = text.toLowerCase().match(/onde|quanto|preço|mercado|distrito|cidade|projeto/);
+      try {
+        // Obter resposta inteligente da Groq
+        const answer = await askGroq(text, knowledgeBase, properties, historyContext);
 
-      if (isSearch && qa.id === "fallback") {
-        setTyping(true);
-        setTimeout(() => {
-          // Fake "Researching" message
-          setMessages(prev => [...prev, {
-            id: uid(),
-            from: "assistant",
-            text: "🔍 *Consultando bases de dados do mercado imobiliário em tempo real...*",
-            time: now()
-          }]);
-
-          setTimeout(() => {
-            pushAssistantMessage(qa.answer, qa.quickReplies);
-          }, 1500);
-        }, 800);
-      } else {
-        pushAssistantMessage(qa.answer, qa.quickReplies);
+        setTyping(false);
+        setMessages((prev) => [
+          ...prev,
+          { id: uid(), from: "assistant", text: answer, time: now() },
+        ]);
+        speak(answer);
+      } catch (e) {
+        // Fallback para KBs locais se a API der erro
+        const qa = findAnswer(text, knowledgeBase);
+        setTyping(false);
+        setMessages((prev) => [
+          ...prev,
+          { id: uid(), from: "assistant", text: qa.answer, time: now(), quickReplies: qa.quickReplies },
+        ]);
+        speak(qa.answer);
       }
     },
-    [pushAssistantMessage, analyzeLead]
+    [messages, knowledgeBase, properties, speak, analyzeLead]
   );
 
   // ── Quick reply router ────────────────────────────────────────────────────
@@ -432,14 +457,19 @@ export default function VirtualAssistant() {
 
   // ── Mute toggle ───────────────────────────────────────────────────────────
   const toggleMute = () => {
-    if (!muted && window.speechSynthesis) window.speechSynthesis.cancel();
-    setMuted((m) => !m);
+    setMuted((m) => {
+      const newlyMuted = !m;
+      // se ficou mute, para imediatamente
+      if (newlyMuted && window.speechSynthesis) window.speechSynthesis.cancel();
+      return newlyMuted;
+    });
     setTalking(false);
   };
 
   // ── Close everything ──────────────────────────────────────────────────────
   const handleClose = () => {
     if (window.speechSynthesis) window.speechSynthesis.cancel();
+    setTalking(false);
     setPhase("idle");
   };
 
@@ -765,7 +795,7 @@ export default function VirtualAssistant() {
                             />
                           </div>
                           <p className="text-sm font-semibold text-slate-700">Assistente Virtual IA</p>
-                          <p className="text-xs text-slate-500 mt-0.5">Sónia Silva · RE/MAX Dinâmica Daire</p>
+                          <p className="text-xs text-slate-500 mt-0.5">Sónia Silva · RE/MAX Dinâmica</p>
                           <div className="mt-3 flex flex-wrap justify-center gap-1.5">
                             {["Comprar imóvel", "Vender imóvel", "Investir", "Contactos"].map((qr) => (
                               <button

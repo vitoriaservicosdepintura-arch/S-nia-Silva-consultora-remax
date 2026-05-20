@@ -23,7 +23,7 @@ export default function Footer() {
             </p>
           </div>
           <p className="mt-4 text-white/70 max-w-md text-sm leading-relaxed">
-            Consultora imobiliária na RE/MAX Dinâmica Daire. Confiança que abre portas para o seu
+            Consultora imobiliária na RE/MAX Dinâmica. Confiança que abre portas para o seu
             futuro no mercado imobiliário em Portugal.
           </p>
           <div className="flex gap-3 mt-6">
@@ -75,7 +75,7 @@ export default function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto px-5 sm:px-8 mt-12 pt-6 border-t border-white/10 text-center text-xs text-white/50">
-        © {new Date().getFullYear()} Sónia Silva · Equipa Júlio Fernandes e Sónia Silva · RE/MAX Dinâmica Daire.
+        © {new Date().getFullYear()} Sónia Silva · Equipa Júlio Fernandes e Sónia Silva · RE/MAX Dinâmica.
       </div>
     </footer>
   );

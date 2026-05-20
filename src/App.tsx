@@ -7,27 +7,32 @@ import Portfolio from "./components/Portfolio";
 import Footer from "./components/Footer";
 import FloatingElements from "./components/FloatingElements";
 import VirtualAssistant from "./components/VirtualAssistant";
+import { AdminProvider } from "./context/AdminContext";
+import AdminDashboard, { LoginOverlay } from "./components/AdminDashboard";
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-white text-slate-900 overflow-x-hidden">
-      <Navbar />
+    <AdminProvider>
+      <div className="min-h-screen bg-white text-slate-900 overflow-x-hidden">
+        <Navbar />
 
-      <main>
-        <Hero />
-        <LeadCapture />
-        <Services />
-        <SocialProof />
-        <Portfolio />
-      </main>
+        <main>
+          <Hero />
+          <LeadCapture />
+          <Services />
+          <SocialProof />
+          <Portfolio />
+        </main>
 
-      <Footer />
+        <Footer />
 
-      {/* Floating social sidebar */}
-      <FloatingElements />
+        <FloatingElements />
+        <VirtualAssistant />
 
-      {/* AI Virtual Assistant — replaces WhatsApp button */}
-      <VirtualAssistant />
-    </div>
+        {/* Admin Components */}
+        <AdminDashboard />
+        <LoginOverlay />
+      </div>
+    </AdminProvider>
   );
 }

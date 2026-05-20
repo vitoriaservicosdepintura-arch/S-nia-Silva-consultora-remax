@@ -71,7 +71,7 @@ export default function LeadCapture() {
 
               <div className="text-white mt-10 w-full flex flex-col items-center">
                 <span className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white/10 border border-white/20 text-sm font-semibold backdrop-blur-md">
-                  <Award className="w-4 h-4" /> Atendimento de Elite · Equipa Fernandes & Silva
+                  <Award className="w-4 h-4" /> Atendimento de Elite · Equipa Fernandes & Sónia Silva
                 </span>
               </div>
             </motion.div>
