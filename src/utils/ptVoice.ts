@@ -98,5 +98,8 @@ export function cleanForTTS(text: string): string {
     .replace(/\*\*/g, "")
     .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
     .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, "")
+    .replace(/RE\/MAX/gi, "Remax")
+    .replace(/(\d)\.(\d{3})/g, "$1$2")
+    .replace(/(\d)\.(\d{3})/g, "$1$2")
     .trim();
 }

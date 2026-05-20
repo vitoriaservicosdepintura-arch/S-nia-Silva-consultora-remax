@@ -3,7 +3,7 @@ import { QA, Property } from "../data/initialContent";
 
 const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY || "";
 
-export async function askGroq(query: string, knowledgeBase: QA[], properties: Property[], chatHistory: { role: string, content: string }[]): Promise<string> {
+export async function askGroq(query: string, knowledgeBase: QA[], properties: Property[], chatHistory: { role: string, content: string }[], langCode: string = "pt-PT"): Promise<string> {
     const kbContext = knowledgeBase.map(kb => `Se perguntarem sobre: ${kb.triggers.join(', ')} -> Responda de forma parecida com: "${kb.answer}"`).join('\n');
 
     const propertiesContext = properties.map(p =>
@@ -22,7 +22,7 @@ export async function askGroq(query: string, knowledgeBase: QA[], properties: Pr
   ${propertiesContext}
 
   REGRAS:
-  1. Use um tom empático, persuasivo e em português de Portugal (pt-PT).
+  1. INDEPENDENTE DO IDIOMA DA BASE DE CONHECIMENTO, RESPONDA **SEMPRE E EXCLUSIVAMENTE** NO IDIOMA DA SEGUINTE SIGLA/CÓDIGO: ${langCode}. (ex: en=Inglês, fr=Francês, pt-PT=Português de Portugal)
   2. Sempre tente direcionar a conversa para uma marcação de visita ou conselho imobiliário gratuito.
   3. Seja conciso e natural.
   4. NUNCA revele que é uma IA.
@@ -67,5 +67,44 @@ export async function askGroq(query: string, knowledgeBase: QA[], properties: Pr
     } catch (error) {
         console.error("Groq Error:", error);
         return "Desculpe, a nossa equipa está toda em visitas neste momento! Poderia deixar o seu contacto de WhatsApp ou ligar para a Sónia Silva diretamente?";
+    }
+}
+
+export async function translateChat(messages: any[], targetLangCode: string): Promise<any[]> {
+    const systemPrompt = `You are a professional translator. Translate the 'text' and 'quickReplies' fields of the provided JSON array to the language code: ${targetLangCode}.
+Rules:
+1. ONLY return valid JSON array.
+2. DO NOT output any markdown blocks like \`\`\`json. Just the raw JSON.
+3. Keep the exact same structure and IDs.
+4. If a text contains markdown (like **bold** or ![alt](url) or links), keep the markdown syntax intact.`;
+
+    try {
+        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${GROQ_API_KEY}`
+            },
+            body: JSON.stringify({
+                model: "llama-3.3-70b-versatile",
+                response_format: { type: "json_object" },
+                messages: [
+                    { role: "system", content: systemPrompt },
+                    { role: "user", content: JSON.stringify({ messages }) }
+                ],
+                temperature: 0.1,
+                max_tokens: 4000,
+            })
+        });
+
+        if (!response.ok) throw new Error("Translation failed");
+
+        const data = await response.json();
+        const content = data.choices[0].message.content;
+        const parsed = JSON.parse(content);
+        return parsed.messages || messages;
+    } catch (e) {
+        console.error("Groq Translation Error", e);
+        return messages; // fallback
     }
 }

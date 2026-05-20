@@ -19,7 +19,7 @@ import { findAnswer, AGENT_PROFILE } from "../data/assistantKnowledge";
 import WelcomeAvatar from "./WelcomeAvatar";
 import { pickBestVoice, loadVoices, cleanForTTS } from "../utils/ptVoice";
 import { useAdmin } from "../context/AdminContext";
-import { askGroq } from "../utils/groqClient";
+import { askGroq, translateChat } from "../utils/groqClient";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Message {
@@ -234,6 +234,17 @@ export default function VirtualAssistant() {
     });
   }, [currentLang]);
 
+  // ── Translate chat on language change ───────────────────────────────────
+  useEffect(() => {
+    if (messages.length > 0) {
+      setTyping(true);
+      translateChat(messages, currentLang).then(translated => {
+        setMessages(translated);
+        setTyping(false);
+      });
+    }
+  }, [currentLang]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // ── Show speech bubble above button after delay ───────────────────────────
   useEffect(() => {
     const t = setTimeout(() => setShowBubble(true), 4000);
@@ -365,7 +376,7 @@ export default function VirtualAssistant() {
 
       try {
         // Obter resposta inteligente da Groq
-        const answer = await askGroq(text, knowledgeBase, properties, historyContext);
+        const answer = await askGroq(text, knowledgeBase, properties, historyContext, currentLang);
 
         setTyping(false);
         setMessages((prev) => [
@@ -384,7 +395,7 @@ export default function VirtualAssistant() {
         speak(qa.answer);
       }
     },
-    [messages, knowledgeBase, properties, speak, analyzeLead]
+    [messages, knowledgeBase, properties, speak, analyzeLead, currentLang]
   );
 
   // ── Quick reply router ────────────────────────────────────────────────────
