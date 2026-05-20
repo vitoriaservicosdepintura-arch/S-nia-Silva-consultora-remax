@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useState, useRef } from "react";
 import { User, Phone, Mail, Target, Send, CheckCircle2, Award } from "lucide-react";
+import { saveLead } from "../utils/supabaseClient";
 
 export default function LeadCapture() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -14,23 +15,20 @@ export default function LeadCapture() {
   const opacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
 
   const [submitted, setSubmitted] = useState(false);
-  const [form, setForm] = useState({ nome: "", telefone: "", email: "", objetivo: "Comprar" });
+  const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState({ nome: "", telefone: "", email: "", objetivo: "Comprar imóvel para habitação" });
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
-      await fetch('/api/leads', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(form)
-      });
+      await saveLead(form);
     } catch (err) {
-      console.error("Erro a enviar formulário:", err);
+      console.error("Erro a guardar lead no Supabase:", err);
     }
 
+    setLoading(false);
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 4500);
     setForm({ nome: "", telefone: "", email: "", objetivo: "Comprar imóvel para habitação" });
@@ -160,9 +158,15 @@ export default function LeadCapture() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               type="submit"
-              className="mt-6 w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-full bg-gradient-to-r from-[#009FE3] to-[#0057A8] text-white font-semibold shadow-lg shadow-[#0057A8]/30 hover:shadow-xl transition-all"
+              disabled={loading}
+              className="mt-6 w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-full bg-gradient-to-r from-[#009FE3] to-[#0057A8] text-white font-semibold shadow-lg shadow-[#0057A8]/30 hover:shadow-xl transition-all disabled:opacity-70"
             >
-              {submitted ? (
+              {loading ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                  A enviar...
+                </>
+              ) : submitted ? (
                 <>
                   <CheckCircle2 className="w-5 h-5" /> Pedido enviado com sucesso!
                 </>
