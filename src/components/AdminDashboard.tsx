@@ -22,9 +22,12 @@ export default function AdminDashboard() {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const imageFile = formData.get('imageFile') as File;
+        const additionalFiles = formData.getAll('additionalFiles') as File[];
 
         let imageUrl = propModal.data?.images[0] || "/images/images anuncio/casa a venda 1/casa1.jpg";
+        let additionalUrls = propModal.data?.images.slice(1) || [];
 
+        // 1. Processar a imagem principal
         if (imageFile && imageFile.size > 0) {
             try {
                 imageUrl = await new Promise((resolve, reject) => {
@@ -40,6 +43,26 @@ export default function AdminDashboard() {
             }
         }
 
+        // 2. Processar as imagens adicionais
+        const newAdditionalUrls: string[] = [];
+        for (const file of additionalFiles) {
+            if (file && file.size > 0) {
+                try {
+                    const b64 = await new Promise<string>((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result as string);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(file);
+                    });
+                    newAdditionalUrls.push(b64);
+                } catch (e) {
+                    console.error("Erro ao processar foto extra:", e);
+                }
+            }
+        }
+
+        const finalImages = [imageUrl, ...(newAdditionalUrls.length > 0 ? newAdditionalUrls : additionalUrls)];
+
         const newProp: Property = {
             id: propModal.data?.id || `prop-${Date.now()}`,
             title: formData.get('title') as string,
@@ -52,7 +75,7 @@ export default function AdminDashboard() {
             idRef: formData.get('idRef') as string || `122031171-${Math.floor(Math.random() * 100)}`,
             description: formData.get('description') as string,
             details: propModal.data?.details || { "Área Útil": formData.get('area') as string },
-            images: [imageUrl]
+            images: finalImages
         };
 
         if (propModal.data) {
@@ -364,6 +387,13 @@ export default function AdminDashboard() {
                                     <input type="file" name="imageFile" accept="image/png, image/jpeg, image/jpg" className="w-full px-4 py-2 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-[#009FE3] file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-[#009FE3] file:text-white hover:file:bg-[#0057A8] file:cursor-pointer file:transition-all text-slate-500 text-sm cursor-pointer" />
                                     {propModal.data?.images[0] && (
                                         <p className="text-xs text-slate-400 mt-1">✓ Imagem atual mantida se não selecionar uma nova.</p>
+                                    )}
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-xs font-bold text-slate-500 uppercase">Fotos Adicionais (Galeria)</label>
+                                    <input type="file" name="additionalFiles" multiple accept="image/png, image/jpeg, image/jpg" className="w-full px-4 py-2 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-[#009FE3] file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-[#EAF6FF] file:text-[#009FE3] hover:file:bg-blue-100 file:cursor-pointer file:transition-all text-slate-500 text-sm cursor-pointer" />
+                                    {propModal.data?.images && propModal.data.images.length > 1 && (
+                                        <p className="text-xs text-slate-400 mt-1">✓ O imóvel já tem {propModal.data.images.length - 1} foto(s) extra(s). Enviar novas irá substituir as antigas. Deixe em branco para mantê-las.</p>
                                     )}
                                 </div>
                                 <button type="submit" className="w-full py-4 bg-gradient-to-r from-[#009FE3] to-[#0057A8] text-white font-bold rounded-2xl shadow-xl shadow-blue-500/30 hover:scale-[1.01] transition-all">
