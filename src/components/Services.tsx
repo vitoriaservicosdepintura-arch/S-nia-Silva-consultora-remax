@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Home, Building2, Key, ArrowUpRight } from "lucide-react";
+import { useAdmin } from "../context/AdminContext";
 
 const services = [
   {
@@ -26,6 +27,7 @@ const services = [
 ];
 
 export default function Services() {
+  const { content } = useAdmin();
   return (
     <section id="servicos" className="relative py-24 bg-gradient-to-b from-white to-[#F5F7FA]">
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
@@ -84,6 +86,24 @@ export default function Services() {
             </motion.div>
           ))}
         </div>
+
+        {content.servicesContent?.images?.length > 0 && (
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+            {content.servicesContent.images.map((img, i) => (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                key={`srv-img-${i}`}
+                className="relative rounded-2xl overflow-hidden aspect-square shadow-xl group"
+              >
+                <img src={img} className="w-full h-full object-cover transition-transform group-hover:scale-110 duration-700" alt={`Serviço ${i}`} />
+                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-all" />
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

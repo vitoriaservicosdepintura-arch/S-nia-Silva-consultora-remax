@@ -8,6 +8,9 @@ interface AdminContextType {
     logout: () => void;
     content: ContentState;
     updateHero: (hero: ContentState['hero']) => void;
+    updateOptions: (options: ContentState['options']) => void;
+    updateServicesContent: (services: ContentState['servicesContent']) => void;
+    updateValuesContent: (values: ContentState['valuesContent']) => void;
     updateProperties: (properties: Property[]) => void;
     updateKnowledgeBase: (kb: QA[]) => void;
     saveContent: () => void;
@@ -36,6 +39,18 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setContent(prev => ({ ...prev, hero }));
     };
 
+    const updateOptions = (options: ContentState['options']) => {
+        setContent(prev => ({ ...prev, options }));
+    };
+
+    const updateServicesContent = (servicesContent: ContentState['servicesContent']) => {
+        setContent(prev => ({ ...prev, servicesContent }));
+    };
+
+    const updateValuesContent = (valuesContent: ContentState['valuesContent']) => {
+        setContent(prev => ({ ...prev, valuesContent }));
+    };
+
     const updateProperties = (properties: Property[]) => {
         setContent(prev => ({ ...prev, properties }));
     };
@@ -56,6 +71,9 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             logout,
             content,
             updateHero,
+            updateOptions,
+            updateServicesContent,
+            updateValuesContent,
             updateProperties,
             updateKnowledgeBase,
             saveContent

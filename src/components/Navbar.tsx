@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, CalendarCheck } from "lucide-react";
+import { useAdmin } from "../context/AdminContext";
 
 const menu = [
   { label: "Home", href: "#home" },
@@ -11,6 +12,7 @@ const menu = [
 ];
 
 export default function Navbar() {
+  const { content } = useAdmin();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -26,18 +28,21 @@ export default function Navbar() {
       initial={{ y: -40, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${scrolled
           ? "bg-white/80 backdrop-blur-xl shadow-[0_6px_30px_rgba(0,87,168,0.08)]"
           : "bg-transparent"
-      }`}
+        }`}
     >
       <nav className="max-w-7xl mx-auto px-5 sm:px-8 h-[72px] flex items-center justify-between">
         <a href="#home" className="flex items-center gap-2 group">
-          <span className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-[#009FE3] to-[#0057A8] flex items-center justify-center text-white font-bold shadow-lg shadow-brand-500/30">
-            S
-            <span className="absolute -bottom-1 -right-1 w-3 h-3 rounded-full bg-white border-2 border-[#009FE3]" />
-          </span>
+          {content?.options?.mainLogoUrl ? (
+            <img src={content.options.mainLogoUrl} alt="Logo Sónia Silva" className="h-10 object-contain hover:scale-105 transition-transform" />
+          ) : (
+            <span className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-[#009FE3] to-[#0057A8] flex items-center justify-center text-white font-bold shadow-lg shadow-brand-500/30">
+              S
+              <span className="absolute -bottom-1 -right-1 w-3 h-3 rounded-full bg-white border-2 border-[#009FE3]" />
+            </span>
+          )}
           <div className="leading-tight">
             <p className="font-display text-lg text-[#0057A8] font-semibold">Sónia Silva</p>
             <p className="text-[10px] tracking-[0.2em] text-slate-500 uppercase">Consultoria Imobiliária</p>

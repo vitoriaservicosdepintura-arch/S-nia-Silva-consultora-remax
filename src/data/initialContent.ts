@@ -30,6 +30,17 @@ export interface ContentState {
         description: string;
         portraitUrl: string;
     };
+    options: {
+        mainLogoUrl: string;
+        secondaryLogoUrl: string;
+        extraImages: string[];
+    };
+    servicesContent: {
+        images: string[];
+    };
+    valuesContent: {
+        images: string[];
+    };
     properties: Property[];
     knowledgeBase: QA[];
 }
@@ -40,6 +51,17 @@ export const INITIAL_CONTENT: ContentState = {
         subtitle: "Consultoria Imobiliária",
         description: "Com a Equipa Júlio Fernandes e Sónia Silva, garantimos uma consultoria de excelência para encontrar o seu imóvel ideal e investir com total segurança, concretizando os seus objetivos no mercado imobiliário em Portugal.",
         portraitUrl: "/images/sonia.png",
+    },
+    options: {
+        mainLogoUrl: "/images/LOGO2-sem-fundo.png",
+        secondaryLogoUrl: "/images/LOGO3-sem-fundo.png",
+        extraImages: []
+    },
+    servicesContent: {
+        images: []
+    },
+    valuesContent: {
+        images: []
     },
     properties: [
         {

@@ -219,7 +219,7 @@ export default function Hero() {
             className="absolute left-[-20px] sm:left-[-80px] top-16 z-30"
           >
             <img
-              src="/images/LOGO2-sem-fundo.png"
+              src={content.options?.mainLogoUrl || "/images/LOGO2-sem-fundo.png"}
               alt="RE/MAX Dinâmica Logo"
               className="w-44 sm:w-64 h-auto object-contain floaty drop-shadow-2xl"
             />
@@ -233,7 +233,7 @@ export default function Hero() {
             className="absolute -right-8 sm:-right-20 top-1/4 z-30"
           >
             <img
-              src="/images/LOGO3-sem-fundo.png"
+              src={content.options?.secondaryLogoUrl || "/images/LOGO3-sem-fundo.png"}
               alt="RE/MAX Balloon"
               className="w-32 sm:w-52 h-auto floaty-rev drop-shadow-2xl"
             />

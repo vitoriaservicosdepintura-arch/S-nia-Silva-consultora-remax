@@ -3,13 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAdmin } from '../context/AdminContext';
 import {
     X, Save, Plus, Trash2, Edit2, Image as ImageIcon,
-    MessageSquare, Home, Briefcase, Sparkles, LogOut, Check
+    MessageSquare, Home, Briefcase, Sparkles, LogOut, Check, Star, Settings
 } from 'lucide-react';
 import { Property, QA } from '../data/initialContent';
 
 export default function AdminDashboard() {
-    const { isLoggedIn, logout, content, updateHero, updateProperties, updateKnowledgeBase, saveContent } = useAdmin();
-    const [activeTab, setActiveTab] = useState<'hero' | 'portfolio' | 'assistant'>('hero');
+    const { isLoggedIn, logout, content, updateHero, updateOptions, updateServicesContent, updateValuesContent, updateProperties, updateKnowledgeBase, saveContent } = useAdmin();
+    const [activeTab, setActiveTab] = useState<'hero' | 'options' | 'services' | 'values' | 'portfolio' | 'assistant'>('hero');
 
     // Modal states
     const [propModal, setPropModal] = useState<{ open: boolean, data: Property | null }>({ open: false, data: null });
@@ -138,6 +138,27 @@ export default function AdminDashboard() {
                         Principal (Hero)
                     </button>
                     <button
+                        onClick={() => setActiveTab('options')}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'options' ? 'bg-[#009FE3] text-white' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
+                    >
+                        <Settings className="w-4 h-4" />
+                        Opções e Logos
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('services')}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'services' ? 'bg-[#009FE3] text-white' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
+                    >
+                        <Briefcase className="w-4 h-4" />
+                        Serviços
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('values')}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'values' ? 'bg-[#009FE3] text-white' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
+                    >
+                        <Star className="w-4 h-4" />
+                        Valores
+                    </button>
+                    <button
                         onClick={() => setActiveTab('portfolio')}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'portfolio' ? 'bg-[#009FE3] text-white' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
                     >
@@ -211,13 +232,137 @@ export default function AdminDashboard() {
                         </section>
                         <section className="space-y-4">
                             <label className="block text-sm font-bold text-slate-700">Imagem de Perfil (Portrait)</label>
-                            <p className="text-xs text-slate-400 mb-2">Introduza o caminho da imagem (ex: /images/sonia.png)</p>
                             <input
-                                type="text"
-                                value={content.hero.portraitUrl}
-                                onChange={(e) => updateHero({ ...content.hero, portraitUrl: e.target.value })}
-                                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#009FE3] outline-none transition-all"
+                                type="file"
+                                accept="image/png, image/jpeg, image/svg+xml"
+                                onChange={async (e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                        const reader = new FileReader();
+                                        reader.onloadend = () => {
+                                            updateHero({ ...content.hero, portraitUrl: reader.result as string });
+                                        };
+                                        reader.readAsDataURL(file);
+                                    }
+                                }}
+                                className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#009FE3] file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-[#009FE3] file:text-white hover:file:bg-[#0057A8] file:cursor-pointer text-slate-500 text-sm cursor-pointer"
                             />
+                            {content.hero.portraitUrl && <img src={content.hero.portraitUrl} className="h-24 mt-4 object-cover rounded-xl shadow-md" alt="Preview Portrait" />}
+                        </section>
+                    </div>
+                )}
+
+                {activeTab === 'options' && (
+                    <div className="max-w-3xl space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <section className="space-y-4">
+                            <label className="block text-sm font-bold text-slate-700">Logótipo Principal (Menu)</label>
+                            <input
+                                type="file"
+                                accept="image/png, image/jpeg, image/svg+xml"
+                                onChange={async (e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                        const reader = new FileReader();
+                                        reader.onloadend = () => updateOptions({ ...content.options, mainLogoUrl: reader.result as string });
+                                        reader.readAsDataURL(file);
+                                    }
+                                }}
+                                className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#009FE3] file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-[#009FE3] file:text-white hover:file:bg-[#0057A8] text-slate-500 text-sm cursor-pointer"
+                            />
+                            {content.options?.mainLogoUrl && <img src={content.options.mainLogoUrl} className="h-16 mt-4 object-contain" alt="Logo Main" />}
+                        </section>
+                        <section className="space-y-4">
+                            <label className="block text-sm font-bold text-slate-700">Logótipo Secundário (Rodapé/Balões)</label>
+                            <input
+                                type="file"
+                                accept="image/png, image/jpeg, image/svg+xml"
+                                onChange={async (e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                        const reader = new FileReader();
+                                        reader.onloadend = () => updateOptions({ ...content.options, secondaryLogoUrl: reader.result as string });
+                                        reader.readAsDataURL(file);
+                                    }
+                                }}
+                                className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#009FE3] file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-[#009FE3] file:text-white hover:file:bg-[#0057A8] text-slate-500 text-sm cursor-pointer"
+                            />
+                            {content.options?.secondaryLogoUrl && <img src={content.options.secondaryLogoUrl} className="h-16 mt-4 object-contain" alt="Logo Secondary" />}
+                        </section>
+                    </div>
+                )}
+
+                {activeTab === 'services' && (
+                    <div className="max-w-3xl space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <section className="space-y-4">
+                            <label className="block text-sm font-bold text-slate-700">Imagens Exibidas na Secção "Serviços"</label>
+                            <input
+                                type="file"
+                                accept="image/png, image/jpeg, image/svg+xml"
+                                multiple
+                                onChange={async (e) => {
+                                    const files = Array.from(e.target.files || []);
+                                    if (!files.length) return;
+                                    const newUrls: string[] = [];
+                                    for (const file of files) {
+                                        try {
+                                            const b64 = await new Promise<string>((resolve) => {
+                                                const reader = new FileReader();
+                                                reader.onloadend = () => resolve(reader.result as string);
+                                                reader.readAsDataURL(file);
+                                            });
+                                            newUrls.push(b64);
+                                        } catch (err) { }
+                                    }
+                                    updateServicesContent({ ...content.servicesContent, images: [...(content.servicesContent?.images || []), ...newUrls] });
+                                }}
+                                className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#009FE3] file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-[#009FE3] file:text-white hover:file:bg-[#0057A8] text-slate-500 text-sm cursor-pointer"
+                            />
+                            <div className="grid grid-cols-3 gap-4 mt-4">
+                                {content.servicesContent?.images?.map((img, i) => (
+                                    <div key={i} className="relative group">
+                                        <img src={img} className="w-full h-24 object-cover rounded-xl shadow-md" />
+                                        <button onClick={() => updateServicesContent({ ...content.servicesContent, images: content.servicesContent.images.filter((_, idx) => idx !== i) })} className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-md"><Trash2 className="w-4 h-4" /></button>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    </div>
+                )}
+
+                {activeTab === 'values' && (
+                    <div className="max-w-3xl space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <section className="space-y-4">
+                            <label className="block text-sm font-bold text-slate-700">Imagens Exibidas na Secção "Valores & Propósito"</label>
+                            <input
+                                type="file"
+                                accept="image/png, image/jpeg, image/svg+xml"
+                                multiple
+                                onChange={async (e) => {
+                                    const files = Array.from(e.target.files || []);
+                                    if (!files.length) return;
+                                    const newUrls: string[] = [];
+                                    for (const file of files) {
+                                        try {
+                                            const b64 = await new Promise<string>((resolve) => {
+                                                const reader = new FileReader();
+                                                reader.onloadend = () => resolve(reader.result as string);
+                                                reader.readAsDataURL(file);
+                                            });
+                                            newUrls.push(b64);
+                                        } catch (err) { }
+                                    }
+                                    updateValuesContent({ ...content.valuesContent, images: [...(content.valuesContent?.images || []), ...newUrls] });
+                                }}
+                                className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#009FE3] file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-[#009FE3] file:text-white hover:file:bg-[#0057A8] text-slate-500 text-sm cursor-pointer"
+                            />
+                            <div className="grid grid-cols-3 gap-4 mt-4">
+                                {content.valuesContent?.images?.map((img, i) => (
+                                    <div key={i} className="relative group">
+                                        <img src={img} className="w-full h-24 object-cover rounded-xl shadow-md" />
+                                        <button onClick={() => updateValuesContent({ ...content.valuesContent, images: content.valuesContent.images.filter((_, idx) => idx !== i) })} className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-md"><Trash2 className="w-4 h-4" /></button>
+                                    </div>
+                                ))}
+                            </div>
                         </section>
                     </div>
                 )}

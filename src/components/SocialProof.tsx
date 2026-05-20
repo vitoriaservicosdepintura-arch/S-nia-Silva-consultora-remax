@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { CheckCircle2, Users, Award, Sparkles } from "lucide-react";
+import { useAdmin } from "../context/AdminContext";
 
 const reasons = [
   "Atendimento personalizado",
@@ -17,6 +18,7 @@ const stats = [
 ];
 
 export default function SocialProof() {
+  const { content } = useAdmin();
   return (
     <section id="sobre" className="relative py-24 bg-white overflow-hidden">
       {/* bg decoration */}
@@ -116,6 +118,25 @@ export default function SocialProof() {
           </motion.div>
         </motion.div>
       </div>
+
+      {content.valuesContent?.images?.length > 0 && (
+        <div className="mt-16 max-w-7xl mx-auto px-5 sm:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {content.valuesContent.images.map((img, i) => (
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                key={`val-img-${i}`}
+                className="rounded-3xl overflow-hidden aspect-[4/3] shadow-lg border border-slate-100 group"
+              >
+                <img src={img} className="w-full h-full object-cover transition-transform group-hover:scale-110 duration-700" alt={`Valor ${i}`} />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
     </section>
   );
 }
