@@ -18,10 +18,27 @@ export default function AdminDashboard() {
     if (!isLoggedIn) return null;
 
     // --- Property Handlers ---
-    const handleSaveProperty = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSaveProperty = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        const imageUrl = formData.get('image') as string;
+        const imageFile = formData.get('imageFile') as File;
+
+        let imageUrl = propModal.data?.images[0] || "/images/images anuncio/casa a venda 1/casa1.jpg";
+
+        if (imageFile && imageFile.size > 0) {
+            try {
+                imageUrl = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result as string);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(imageFile);
+                });
+            } catch (error) {
+                console.error("Erro ao processar imagem:", error);
+                alert("Erro a ler a imagem selecionada.");
+                return;
+            }
+        }
 
         const newProp: Property = {
             id: propModal.data?.id || `prop-${Date.now()}`,
@@ -35,7 +52,7 @@ export default function AdminDashboard() {
             idRef: formData.get('idRef') as string || `122031171-${Math.floor(Math.random() * 100)}`,
             description: formData.get('description') as string,
             details: propModal.data?.details || { "Área Útil": formData.get('area') as string },
-            images: imageUrl ? [imageUrl] : (propModal.data?.images || ["/images/images anuncio/casa a venda 1/casa1.jpg"])
+            images: [imageUrl]
         };
 
         if (propModal.data) {
@@ -343,8 +360,11 @@ export default function AdminDashboard() {
                                     <textarea required name="description" defaultValue={propModal.data?.description} rows={3} className="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-[#009FE3] resize-none" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-xs font-bold text-slate-500 uppercase">URL da Imagem Principal</label>
-                                    <input name="image" defaultValue={propModal.data?.images[0]} placeholder="/images/sua-imagem.jpg" className="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-[#009FE3]" />
+                                    <label className="text-xs font-bold text-slate-500 uppercase">Imagem Principal (Upload)</label>
+                                    <input type="file" name="imageFile" accept="image/png, image/jpeg, image/jpg" className="w-full px-4 py-2 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-[#009FE3] file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-[#009FE3] file:text-white hover:file:bg-[#0057A8] file:cursor-pointer file:transition-all text-slate-500 text-sm cursor-pointer" />
+                                    {propModal.data?.images[0] && (
+                                        <p className="text-xs text-slate-400 mt-1">✓ Imagem atual mantida se não selecionar uma nova.</p>
+                                    )}
                                 </div>
                                 <button type="submit" className="w-full py-4 bg-gradient-to-r from-[#009FE3] to-[#0057A8] text-white font-bold rounded-2xl shadow-xl shadow-blue-500/30 hover:scale-[1.01] transition-all">
                                     {propModal.data ? 'Atualizar Imóvel' : 'Criar Imóvel'}
