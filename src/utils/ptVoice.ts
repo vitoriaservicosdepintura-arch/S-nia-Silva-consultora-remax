@@ -31,7 +31,7 @@ function isLikelyFemale(voice: SpeechSynthesisVoice, locale: string): boolean {
   return markers.some((m) => name.includes(m));
 }
 
-export function pickBestVoice(voices: SpeechSynthesisVoice[], locale: string): SpeechSynthesisVoice | null {
+export function pickBestVoice(voices: SpeechSynthesisVoice[], locale: string, gender: "female" | "male" = "female"): SpeechSynthesisVoice | null {
   if (!voices.length) return null;
 
   // Filter by requested lang code
@@ -41,20 +41,37 @@ export function pickBestVoice(voices: SpeechSynthesisVoice[], locale: string): S
   const exactLocale = filtered.filter(v => v.lang.toLowerCase().includes(locale.toLowerCase()));
   const targetPool = exactLocale.length > 0 ? exactLocale : filtered;
 
-  // 1️⃣ Priority: Neural/Natural Female
-  const femaleNeural = targetPool.find(v => {
-    const n = v.name.toLowerCase();
-    return (n.includes("natural") || n.includes("neural") || n.includes("online")) && isLikelyFemale(v, locale);
-  });
-  if (femaleNeural) return femaleNeural;
+  if (gender === "male") {
+    // 1️⃣ Priority: Neural/Natural Male
+    const maleNeural = targetPool.find(v => {
+      const n = v.name.toLowerCase();
+      return (n.includes("natural") || n.includes("neural") || n.includes("online")) && !isLikelyFemale(v, locale);
+    });
+    if (maleNeural) return maleNeural;
 
-  // 2️⃣ Priority: Listed Female Names
-  const femaleNamed = targetPool.find(v => isLikelyFemale(v, locale));
-  if (femaleNamed) return femaleNamed;
+    // 2️⃣ Priority: Listed Male Names
+    const maleNamed = targetPool.find(v => MALE_FRAGMENTS.some(m => v.name.toLowerCase().includes(m)));
+    if (maleNamed) return maleNamed;
 
-  // 3️⃣ Priority: Any non-male for that lang
-  const nonMale = targetPool.find(v => !MALE_FRAGMENTS.some(m => v.name.toLowerCase().includes(m)));
-  if (nonMale) return nonMale;
+    // 3️⃣ Priority: Any non-female
+    const nonFemale = targetPool.find(v => !isLikelyFemale(v, locale));
+    if (nonFemale) return nonFemale;
+  } else {
+    // 1️⃣ Priority: Neural/Natural Female
+    const femaleNeural = targetPool.find(v => {
+      const n = v.name.toLowerCase();
+      return (n.includes("natural") || n.includes("neural") || n.includes("online")) && isLikelyFemale(v, locale);
+    });
+    if (femaleNeural) return femaleNeural;
+
+    // 2️⃣ Priority: Listed Female Names
+    const femaleNamed = targetPool.find(v => isLikelyFemale(v, locale));
+    if (femaleNamed) return femaleNamed;
+
+    // 3️⃣ Priority: Any non-male for that lang
+    const nonMale = targetPool.find(v => !MALE_FRAGMENTS.some(m => v.name.toLowerCase().includes(m)));
+    if (nonMale) return nonMale;
+  }
 
   return targetPool.length > 0 ? targetPool[0] : voices[0];
 }
@@ -95,11 +112,27 @@ export function loadVoices(): Promise<SpeechSynthesisVoice[]> {
  */
 export function cleanForTTS(text: string): string {
   return text
-    .replace(/\*\*/g, "")
+    // Remove image markdown completely (don't read alt text either)
+    .replace(/!\[([^\]]*)\]\([^)]+\)/g, "")
+    // Remove markdown links — keep label text but discard URL
     .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
-    .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, "")
+    // Remove raw URLs (http/https)
+    .replace(/https?:\/\/\S+/g, "")
+    // Remove bold/italic markers
+    .replace(/\*\*/g, "")
+    .replace(/\*/g, "")
+    // Remove emoji/symbols from unicode ranges
+    .replace(/[^\x00-\x7FÀ-ÿ\s.,!?;:()\-]/gu, "")
+    // Remove RE/MAX slashes
     .replace(/RE\/MAX/gi, "Remax")
+    // Remove number formatting dots
     .replace(/(\d)\.(\d{3})/g, "$1$2")
     .replace(/(\d)\.(\d{3})/g, "$1$2")
+    // Remove WhatsApp button label noise
+    .replace(/Confirmar no WhatsApp.*$/gim, "")
+    .replace(/CLIQUE AQUI.*$/gim, "")
+    // Collapse extra whitespace/newlines
+    .replace(/\n{2,}/g, " ")
+    .replace(/\s{2,}/g, " ")
     .trim();
 }

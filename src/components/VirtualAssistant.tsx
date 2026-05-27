@@ -38,7 +38,7 @@ const LANGUAGES = [
   { id: "en-GB", label: "English", flag: "🇬🇧" },
 ];
 
-type Phase = "idle" | "welcome" | "chat";
+type Phase = "idle" | "welcome" | "lead_form" | "chat";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function now() {
@@ -48,9 +48,24 @@ function uid() {
   return Math.random().toString(36).slice(2);
 }
 
+// Sanitize AI output — convert [![img](imgUrl) label](linkUrl) → [label](linkUrl)
+function sanitizeAIText(text: string): string {
+  return text
+    // Convert image-in-link: [![alt](imgUrl) label](linkUrl) → [label](linkUrl)
+    .replace(/\[!\[[^\]]*\]\([^)]+\)\s*([^\]]*)\]\(([^)]+)\)/g, (_match, label, url) => {
+      const cleanLabel = label.trim() || "Ver link";
+      return `[${cleanLabel}](${url})`;
+    })
+    // Also handle plain [![alt](imgUrl)](linkUrl) with no extra label → [Ver no WhatsApp](linkUrl)
+    .replace(/\[!\[[^\]]*\]\([^)]+\)\]\(([^)]+)\)/g, (_match, url) => {
+      return `[Confirmar no WhatsApp da Sónia](${url})`;
+    });
+}
+
 // parse **bold**, [link](url), and ![alt](url) markdown → JSX
-function parseText(text: string) {
-  const lines = text.split("\n");
+function parseText(text: string, lead?: { name: string; email: string; phone: string }, profile?: { intent: string }) {
+  const sanitized = sanitizeAIText(text);
+  const lines = sanitized.split("\n");
   return lines.map((line, li) => {
     // Regex splits the string and keeps the matched patterns in the array
     const parts = line.split(/(\*\*[^*]+\*\*|!\[[^\]]*\]\([^)]+\)|\[[^\]]+\]\([^)]+\))/g);
@@ -83,15 +98,52 @@ function parseText(text: string) {
           // Link check: [text](url)
           if (p.startsWith("[") && p.match(/\[([^\]]+)\]\(([^)]+)\)/)) {
             const m = p.match(/\[([^\]]+)\]\(([^)]+)\)/)!;
+            const label = m[1];
+            let url = m[2];
+            const isWhatsApp = url.includes("wa.me");
+
+            if (isWhatsApp && lead) {
+              // Append lead info to WhatsApp text
+              let leadDetails = `\n\n[Detalhes do Lead]\nNome: ${lead.name}\nTelemóvel: ${lead.phone}\nEmail: ${lead.email}`;
+              if (profile?.intent && profile.intent !== "unknown") {
+                leadDetails += `\nCategoria/Interesse: ${profile.intent.toUpperCase()}`;
+              }
+              const currentTextMatch = url.match(/text=([^&]*)/);
+              if (currentTextMatch) {
+                const currentText = decodeURIComponent(currentTextMatch[1]);
+                url = url.replace(/text=[^&]*/, `text=${encodeURIComponent(currentText + leadDetails)}`);
+              } else {
+                url += `?text=${encodeURIComponent("Olá Sónia!" + leadDetails)}`;
+              }
+            }
+
+            if (isWhatsApp) {
+              return (
+                <a
+                  key={i}
+                  href={url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 mt-3 px-4 py-2.5 rounded-xl font-semibold text-sm text-white shadow-md transition-all hover:scale-105 active:scale-95"
+                  style={{ background: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)" }}
+                >
+                  <svg viewBox="0 0 32 32" width="18" height="18" fill="white" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16.01 2C8.27 2 2 8.27 2 16.01c0 2.47.65 4.87 1.88 6.99L2 30l7.18-1.87A13.94 13.94 0 0 0 16.01 30C23.73 30 30 23.73 30 16.01 30 8.27 23.73 2 16.01 2zm6.93 19.67c-.29.81-1.69 1.55-2.31 1.64-.59.09-1.33.12-2.14-.14-.49-.16-1.12-.38-1.92-.74-3.38-1.46-5.58-4.85-5.75-5.07-.17-.22-1.35-1.8-1.35-3.43 0-1.63.86-2.43 1.16-2.76.3-.33.65-.41.87-.41l.63.01c.2 0 .47-.08.74.56.29.67.97 2.36 1.05 2.53.09.17.14.38.03.6-.11.22-.17.35-.33.54l-.49.57c-.16.18-.34.38-.14.75.19.36.86 1.42 1.84 2.3 1.26 1.13 2.33 1.48 2.66 1.65.33.17.52.14.71-.08.19-.23.82-.96 1.04-1.29.22-.33.44-.27.74-.16.31.11 1.96.93 2.3 1.1.33.17.55.25.63.39.09.14.09.81-.19 1.62z" />
+                  </svg>
+                  {label.replace(/\[.*?\]/g, "").trim()}
+                </a>
+              );
+            }
+
             return (
               <a
                 key={i}
-                href={m[2]}
+                href={url}
                 target="_blank"
                 rel="noreferrer"
                 className="underline text-[#009FE3] hover:text-[#0057A8]"
               >
-                {m[1]}
+                {label}
               </a>
             );
           }
@@ -198,6 +250,8 @@ export default function VirtualAssistant() {
   const voiceRef = useRef<SpeechSynthesisVoice | null>(null);
   const [voiceReady, setVoiceReady] = useState(false);
   const [voiceName, setVoiceName] = useState<string>("");
+  const [voiceGender, setVoiceGender] = useState<"female" | "male">("female");
+  const [leadInfo, setLeadInfo] = useState({ name: "", email: "", phone: "" });
   const [profile, setProfile] = useState({
     intent: "unknown",
     area: "",
@@ -225,14 +279,14 @@ export default function VirtualAssistant() {
   // ── Preload best voice on mount / lang change ───────────────────────
   useEffect(() => {
     loadVoices().then((voices) => {
-      const best = pickBestVoice(voices, currentLang);
+      const best = pickBestVoice(voices, currentLang, voiceGender);
       if (best) {
         voiceRef.current = best;
         setVoiceName(best.name);
         setVoiceReady(true);
       }
     });
-  }, [currentLang]);
+  }, [currentLang, voiceGender]);
 
   // ── Translate chat on language change ───────────────────────────────────
   useEffect(() => {
@@ -255,16 +309,7 @@ export default function VirtualAssistant() {
     return () => clearTimeout(t);
   }, []);
 
-  // ── Greet on entering chat phase ──────────────────────────────────────────
-  useEffect(() => {
-    if (phase === "chat" && !hasGreeted) {
-      setHasGreeted(true);
-      setTimeout(() => {
-        const welcome = findAnswer("olá", knowledgeBase);
-        pushAssistantMessage(welcome.answer, welcome.quickReplies);
-      }, 350);
-    }
-  }, [phase, hasGreeted]);
+
 
   // ── Scroll to bottom ──────────────────────────────────────────────────────
   useEffect(() => {
@@ -294,7 +339,7 @@ export default function VirtualAssistant() {
 
       const chosenVoice =
         voiceRef.current ??
-        pickBestVoice(synth.getVoices(), currentLang);
+        pickBestVoice(synth.getVoices(), currentLang, voiceGender);
 
       if (chosenVoice) {
         utt.voice = chosenVoice;
@@ -339,7 +384,7 @@ export default function VirtualAssistant() {
 
       synth.speak(utt);
     },
-    [muted, currentLang] // eslint-disable-line react-hooks/exhaustive-deps
+    [muted, currentLang, voiceGender] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   // ── Push assistant message ─────────────────────────────────────────────────
@@ -358,6 +403,39 @@ export default function VirtualAssistant() {
     },
     [speak]
   );
+
+  // ── Greet on entering welcome phase (opening assistant) ───────────────────
+  useEffect(() => {
+    if (phase === "welcome") {
+      setTimeout(() => {
+        speak("Olá! 👋 Bem-vindo ao site da Sónia Silva! Sou a sua assistente virtual. Estou aqui para ajudar a encontrar o imóvel ideal ou agendar uma consultoria gratuita! 🏡");
+      }, 300);
+    }
+  }, [phase, speak]);
+
+  // ── Greet on entering lead form ───────────────────────────────────────────
+  useEffect(() => {
+    if (phase === "lead_form") {
+      setTimeout(() => {
+        speak("Para iniciarmos uma boa conversa, por favor colocar as suas informações abaixo.");
+      }, 300);
+    }
+  }, [phase, speak]);
+
+  // ── Greet on entering chat phase ──────────────────────────────────────────
+  useEffect(() => {
+    if (phase === "chat" && !hasGreeted) {
+      setHasGreeted(true);
+      setTimeout(() => {
+        const firstName = leadInfo.name ? leadInfo.name.split(' ')[0] : "";
+        const welcomeText = firstName
+          ? `Muito bem-vindo(a), **${firstName}**! É um prazer falar consigo. 😊\n\nComo é que eu posso ajudar hoje?`
+          : `Muito bem-vindo(a)! É um prazer falar consigo. 😊\n\nComo posso ajudar hoje?`;
+
+        pushAssistantMessage(welcomeText, ["Comprar imóvel", "Vender imóvel", "Investir", "Falar no WhatsApp"]);
+      }, 350);
+    }
+  }, [phase, hasGreeted, leadInfo.name, pushAssistantMessage]);
 
   // ── Handle user send ──────────────────────────────────────────────────────
   const handleSend = useCallback(
@@ -380,7 +458,7 @@ export default function VirtualAssistant() {
 
       try {
         // Obter resposta inteligente da Groq
-        const answer = await askGroq(text, knowledgeBase, properties, historyContext, currentLang);
+        const answer = await askGroq(text, knowledgeBase, properties, historyContext, currentLang, leadInfo);
 
         setTyping(false);
         setMessages((prev) => [
@@ -410,7 +488,18 @@ export default function VirtualAssistant() {
         qr === "Falar no WhatsApp" ||
         qr === "Falar com a Sónia"
       ) {
-        window.open(AGENT_PROFILE.whatsapp, "_blank");
+        let text = "Olá Sónia! Vim pelo Assistente Virtual do site e gostaria de falar consigo.";
+        if (leadInfo.name) {
+          text += `\n\n[Detalhes do Lead]`;
+          text += `\nNome: ${leadInfo.name}`;
+          text += `\nTelemóvel: ${leadInfo.phone}`;
+          text += `\nEmail: ${leadInfo.email}`;
+          if (profile.intent && profile.intent !== "unknown") {
+            text += `\nCategoria/Interesse: ${profile.intent.toUpperCase()}`;
+          }
+        }
+        const waUrl = `https://wa.me/${AGENT_PROFILE.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(text)}`;
+        window.open(waUrl, "_blank");
         pushAssistantMessage(
           `A abrir o WhatsApp da Sónia... 📱\nSe não abrir automaticamente, contacte: **${AGENT_PROFILE.phone}**`,
           ["Ir para o formulário", "Fechar"]
@@ -436,7 +525,7 @@ export default function VirtualAssistant() {
       }
       handleSend(qr);
     },
-    [handleSend, pushAssistantMessage]
+    [handleSend, pushAssistantMessage, leadInfo, profile]
   );
 
   // ── Mic toggle ────────────────────────────────────────────────────────────
@@ -485,6 +574,10 @@ export default function VirtualAssistant() {
   const handleClose = () => {
     if (window.speechSynthesis) window.speechSynthesis.cancel();
     setTalking(false);
+
+    // Mensagem de encerramento
+    speak("Obrigada pelo seu contacto. Estarei aqui caso precise de mais alguma coisa. Até breve!");
+
     setPhase("idle");
   };
 
@@ -591,9 +684,88 @@ export default function VirtualAssistant() {
             exit={{ opacity: 0 }}
           >
             <WelcomeAvatar
-              onEnterChat={() => setPhase("chat")}
+              onEnterChat={() => setPhase("lead_form")}
               onClose={handleClose}
             />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ══════════════════════════════════════════════════════════════════ */}
+      {/*  LEAD FORM — Capturing User Info First                            */}
+      {/* ══════════════════════════════════════════════════════════════════ */}
+      <AnimatePresence>
+        {phase === "lead_form" && (
+          <motion.div
+            key="lead"
+            className="fixed bottom-6 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[380px]"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+          >
+            <div className="bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-100 flex flex-col items-center p-6 text-center">
+              <button
+                onClick={handleClose}
+                className="absolute top-4 right-4 w-7 h-7 bg-slate-50 hover:bg-slate-100 rounded-full flex items-center justify-center text-slate-400 transition"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+
+              <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-[#EAF6FF] shadow-sm mb-3">
+                <img
+                  src="/images/sonia.png"
+                  alt="Sónia"
+                  className="w-full h-full object-cover"
+                  style={{ objectPosition: "50% 10%" }}
+                />
+              </div>
+              <h3 className="font-bold text-slate-800 text-lg mb-1">Para iniciarmos uma boa conversa...</h3>
+              <p className="text-sm text-slate-500 mb-5 leading-relaxed">
+                Por favor, colocar as suas informações abaixo.
+              </p>
+
+              <form
+                className="w-full flex flex-col gap-3"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (leadInfo.name && leadInfo.phone && leadInfo.email) {
+                    setPhase("chat");
+                  }
+                }}
+              >
+                <input
+                  required
+                  type="text"
+                  placeholder="Seu nome"
+                  value={leadInfo.name}
+                  onChange={e => setLeadInfo({ ...leadInfo, name: e.target.value })}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#009FE3]/50 text-sm"
+                />
+                <input
+                  required
+                  type="email"
+                  placeholder="Seu e-mail"
+                  value={leadInfo.email}
+                  onChange={e => setLeadInfo({ ...leadInfo, email: e.target.value })}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#009FE3]/50 text-sm"
+                />
+                <input
+                  required
+                  type="tel"
+                  placeholder="Seu telefone"
+                  value={leadInfo.phone}
+                  onChange={e => setLeadInfo({ ...leadInfo, phone: e.target.value })}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#009FE3]/50 text-sm"
+                />
+
+                <button
+                  type="submit"
+                  className="w-full mt-2 py-3 rounded-xl bg-gradient-to-r from-[#009FE3] to-[#0057A8] text-white font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition active:scale-[0.98] shadow-lg shadow-[#009FE3]/20"
+                >
+                  <Send className="w-4 h-4" /> Iniciar conversa
+                </button>
+              </form>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -722,6 +894,18 @@ export default function VirtualAssistant() {
 
                 {/* Controls */}
                 <div className="flex items-center gap-1 relative z-10">
+                  {/* Gender Toggle */}
+                  <button
+                    onClick={() => {
+                      setVoiceGender(voiceGender === "female" ? "male" : "female");
+                      voiceRef.current = null; // force reload voice
+                    }}
+                    title={voiceGender === "female" ? "Mudar para voz masculina" : "Mudar para voz feminina"}
+                    className="w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center text-white transition text-sm"
+                  >
+                    {voiceGender === "female" ? "👩" : "👨"}
+                  </button>
+
                   {/* Language Selector */}
                   <div className="relative">
                     <button
@@ -852,7 +1036,7 @@ export default function VirtualAssistant() {
                                 : "bg-slate-50 text-slate-800 border border-slate-100 rounded-tl-sm shadow-sm"
                                 }`}
                             >
-                              {parseText(msg.text)}
+                              {parseText(msg.text, leadInfo, profile)}
                             </div>
                             <span className="text-[10px] text-slate-400 px-1">{msg.time}</span>
 
